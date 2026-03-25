@@ -12,4 +12,4 @@ build_log.txt
 build_log_v2.txt
 metadata_v2.json
 .env
-landing-page/firebase-config.js
+# landing-page/firebase-config.js
