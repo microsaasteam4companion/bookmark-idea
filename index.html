@@ -2260,6 +2260,10 @@
         order: unset;
       }
     }
+  
+    .nav-logo-box { width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .nav-logo-box img { width:100%; height:100%; object-fit:cover; }
+
   </style>
 </head>
 
@@ -2344,6 +2348,10 @@
         pointer-events: none;
       }
     }
+  
+    .nav-logo-box { width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .nav-logo-box img { width:100%; height:100%; object-fit:cover; }
+
   </style>
 
   <script>
@@ -2421,6 +2429,7 @@
   
   
   
+  
   <nav id="nav">
     <a href="/" class="nav-logo">
       <div class="nav-logo-box" style="background:transparent; overflow:hidden;"><img src="/ctrlsense_logo.png"
@@ -2468,6 +2477,19 @@
       </button>
     </div>
   </nav>
+
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="/#pipeline">How it works</a>
+    <a href="/#features">Features</a>
+    <a href="/docs">Docs</a>
+    <a href="/blogs">Blogs</a>
+    <a href="/purchases" id="mobile-purchases-link" style="display: none;">My Purchases</a>
+    <a href="/#download" id="mobile-dl-link">Download Now</a>
+    <div id="mobile-auth-section" style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border);">
+    </div>
+  </div>
+
 
   
   

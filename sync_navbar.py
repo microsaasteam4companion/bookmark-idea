@@ -1,7 +1,6 @@
 import os
 import re
 
-# NOW WE SYNC DOCUMENTS IN THE ROOT
 root_dir = r"c:\Users\LENOVO\Downloads\bookmark-idea-main\bookmark-idea-main"
 
 navbar_html = """
@@ -67,36 +66,44 @@ navbar_html = """
 """
 
 def apply_navbar(directory):
-    # Only target the relevant HTML files in root and blogs/
-    target_files = [
-        "index.html", "docs.html", "purchases.html", "privacy.html", "terms.html"
-    ]
-    # Also include blogs/ index and posts
+    target_files = ["index.html", "docs.html", "purchases.html", "privacy.html", "terms.html"]
+    
     for root, dirs, files in os.walk(directory):
-        if "landing-page" in root: continue # skip the old folder
-        if "core" in root or "frontend" in root: continue # skip app folders
+        if any(x in root for x in [".git", "core", "frontend", "landing-page"]): continue
         
         for file in files:
             if file.endswith(".html"):
                 path = os.path.join(root, file)
-                # Check if it's one of ours
                 if file in target_files or "blogs" in root:
                     with open(path, "r", encoding="utf-8") as f:
                         content = f.read()
                     
-                    # Replace nav block
+                    # 1. Replace nav block
                     content = re.sub(r'<nav.*?</nav>', navbar_html, content, flags=re.DOTALL)
                     
-                    # Replace mobile components
-                    content = re.sub(r'<div class="mobile-overlay".*?</div>', '', content, flags=re.DOTALL)
-                    content = re.sub(r'<div class="mobile-menu".*?</div>', '', content, flags=re.DOTALL)
+                    # 2. Add logo CSS fix to existing style block or head
+                    logo_css = """
+    .nav-logo-box { width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .nav-logo-box img { width:100%; height:100%; object-fit:cover; }
+"""
+                    if logo_css not in content:
+                        if "</style>" in content:
+                            content = content.replace("</style>", logo_css + "\n  </style>")
+                        elif "</head>" in content:
+                            content = content.replace("</head>", f"<style>\n  {logo_css}\n  </style>\n</head>")
                     
-                    # Update internal link to config for JS (if needed)
-                    # content = content.replace('src="/landing-page/', 'src="/')
-                    
+                    # 3. Clean blog card links ONLY in blogs/index.html
+                    if file == "index.html" and "blogs" in root:
+                        content = re.sub(r'href="([^"]+)\.html"', r'href="/blogs/\1"', content)
+                        # Fix for Home link if it got messed up
+                        content = content.replace('href="/blogs//"', 'href="/"')
+                        content = content.replace('href="/blogs/docs"', 'href="/docs"')
+                        content = content.replace('href="/blogs/blogs"', 'href="/blogs"')
+                        content = content.replace('href="/blogs/purchases"', 'href="/purchases"')
+
                     with open(path, "w", encoding="utf-8") as f:
                         f.write(content)
-                    print(f"Applied navbar to {path}")
+                    print(f"Applied navbar & logo fix to {path}")
 
 apply_navbar(root_dir)
-print("All pages synchronized at root.")
+print("All pages synchronized with logo fix.")
