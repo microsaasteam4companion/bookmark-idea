@@ -39,7 +39,7 @@ navbar_html = """
         <img class="user-avatar" id="user-avatar" src="" alt="User">
         <span class="user-name" id="user-name"></span>
         <div class="user-dropdown" id="user-dropdown">
-          <a href="/purchases">🛒 My Purchases</a>
+          <a href="/purchases.html">🛒 My Purchases</a>
           <div class="dd-divider"></div>
           <button onclick="signOutUser()">🚪 Sign Out</button>
         </div>
@@ -58,7 +58,8 @@ navbar_html = """
     <a href="/#features">Features</a>
     <a href="/docs">Docs</a>
     <a href="/blogs">Blogs</a>
-    <a href="/#download" id="mobile-dl-link">Download</a>
+    <a href="/purchases.html" id="mobile-purchases-link" style="display: none;">My Purchases</a>
+    <a href="/#download" id="mobile-dl-link">Download Now</a>
     <div id="mobile-auth-section" style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border);">
        <!-- Auth content injected via JS -->
     </div>
@@ -74,10 +75,9 @@ def apply_navbar(directory):
                     content = f.read()
                 
                 # 1. Replace nav block
-                # Match <nav... to </nav>
                 content = re.sub(r'<nav.*?</nav>', navbar_html, content, flags=re.DOTALL)
                 
-                # 2. Add/replace mobile components (redundant but safe)
+                # 2. Add/replace mobile components
                 content = re.sub(r'<div class="mobile-overlay".*?</div>', '', content, flags=re.DOTALL)
                 content = re.sub(r'<div class="mobile-menu".*?</div>', '', content, flags=re.DOTALL)
                 

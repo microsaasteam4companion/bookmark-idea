@@ -81,6 +81,7 @@
 </head>
 <body>
   
+  
   <nav id="nav">
     <a href="/" class="nav-logo">
       <div class="nav-logo-box" style="background:transparent; overflow:hidden;"><img src="/ctrlsense_logo.png"
@@ -116,7 +117,7 @@
         <img class="user-avatar" id="user-avatar" src="" alt="User">
         <span class="user-name" id="user-name"></span>
         <div class="user-dropdown" id="user-dropdown">
-          <a href="/purchases">🛒 My Purchases</a>
+          <a href="/purchases.html">🛒 My Purchases</a>
           <div class="dd-divider"></div>
           <button onclick="signOutUser()">🚪 Sign Out</button>
         </div>
@@ -128,6 +129,11 @@
       </button>
     </div>
   </nav>
+
+  
+  
+  </div>
+
 
   
   
@@ -183,6 +189,64 @@
     if(mobileOverlay) mobileOverlay.addEventListener('click', toggleMenu);
     mobileMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => { if (mobileMenu.classList.contains('active')) toggleMenu(); });
+    });
+  </script>
+
+
+  <!-- Firebase & Auth Sync -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="/firebase-config.js"></script>
+  <script>
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    function openAuthModal() { 
+        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+            const modal = document.getElementById('auth-modal');
+            if(modal) modal.style.display = 'flex';
+        } else {
+            window.location.href = '/#download'; 
+        }
+    }
+    
+    function signOutUser() { auth.signOut().then(() => window.location.reload()); }
+    
+    function toggleUserDropdown(e) {
+      if(e) e.stopPropagation();
+      const dd = document.getElementById('user-dropdown');
+      if(dd) dd.classList.toggle('active');
+    }
+
+    auth.onAuthStateChanged(user => {
+      const signInBtn = document.getElementById('auth-signin-btn');
+      const userMenu = document.getElementById('user-menu');
+      const mobilePurchases = document.getElementById('mobile-purchases-link');
+      
+      if (user) {
+        if(signInBtn) signInBtn.style.display = 'none';
+        if(userMenu) {
+            userMenu.style.display = 'flex';
+            const avatar = document.getElementById('user-avatar');
+            if(avatar) avatar.src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || user.email);
+            const name = document.getElementById('user-name');
+            if(name) name.textContent = user.displayName || user.email.split('@')[0];
+        }
+        if(mobilePurchases) mobilePurchases.style.display = 'block';
+      } else {
+        if(signInBtn) signInBtn.style.display = 'block';
+        if(userMenu) userMenu.style.display = 'none';
+        if(mobilePurchases) mobilePurchases.style.display = 'none';
+      }
+    });
+
+    window.addEventListener('click', () => {
+        const dd = document.getElementById('user-dropdown');
+        if(dd && dd.classList.contains('active')) dd.classList.remove('active');
     });
   </script>
 
