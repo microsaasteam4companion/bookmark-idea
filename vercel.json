@@ -5,6 +5,12 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/blogs", "destination": "/landing-page/blogs/index.html" },
+    { "source": "/blogs/(.*)", "destination": "/landing-page/blogs/$1" },
+    { "source": "/docs", "destination": "/landing-page/docs.html" },
+    { "source": "/purchases", "destination": "/landing-page/purchases.html" },
+    { "source": "/privacy", "destination": "/landing-page/privacy.html" },
+    { "source": "/terms", "destination": "/landing-page/terms.html" },
     { "source": "/(.*)", "destination": "/landing-page/$1" }
   ]
 }
