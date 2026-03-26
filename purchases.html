@@ -269,6 +269,12 @@
     <a href="./">← Back to Home</a>
   </div>
 
+  <div id="debug-info" style="margin-top: 40px; padding: 12px; border: 1px dashed #333; border-radius: 8px; font-size: 11px; color: #555; display: none;">
+    <p>Debug Info (Only you can see this):</p>
+    <p>Current UID: <span id="debug-uid" style="color: #888; user-select: all;">Loading...</span></p>
+    <p><i>Use this UID when adding manual entries to Firestore 'purchases' collection.</i></p>
+  </div>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -301,6 +307,12 @@
         document.getElementById('dash-avatar').src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || user.email) + '&background=7c3aed&color=fff&size=80';
         document.getElementById('dash-name').textContent = user.displayName || user.email.split('@')[0];
         document.getElementById('dash-email').textContent = user.email;
+        
+        // Populate Debug UID
+        const debugInfo = document.getElementById('debug-info');
+        const debugUid = document.getElementById('debug-uid');
+        if(debugInfo) debugInfo.style.display = 'block';
+        if(debugUid) debugUid.textContent = user.uid;
 
         // Check for payment redirect parameters (Dodo Payments)
         const paymentId = urlParams.get('payment_id') || urlParams.get('checkout_id') || urlParams.get('checkout_session_id') || urlParams.get('session_id') || urlParams.get('transaction_id');
