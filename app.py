@@ -38,10 +38,15 @@ app = Flask(__name__, static_folder="frontend", static_url_path="")
 vector_store: VectorStore | None = None
 
 # ── Dodo Payments Client ─────────────────────────────────────────────
-dodo_client = DodoPayments(
-    bearer_token=os.getenv("DODO_PAYMENTS_API_KEY"),
-    environment=os.getenv("DODO_ENVIRONMENT", "test_mode")
-)
+dodo_api_key = os.getenv("DODO_PAYMENTS_API_KEY")
+if dodo_api_key:
+    dodo_client = DodoPayments(
+        bearer_token=dodo_api_key,
+        environment=os.getenv("DODO_ENVIRONMENT", "test_mode")
+    )
+else:
+    dodo_client = None
+    print("Warning: DODO_PAYMENTS_API_KEY not found. Payments will be disabled.")
 
 
 # ── Serve Frontend ───────────────────────────────────────────────────
@@ -113,6 +118,12 @@ def create_checkout_session():
         redirect_url = data.get("redirect_url", "https://ctrlsense.vercel.app/purchases.html")
 
         # Checkout session via SDK
+        if not dodo_client:
+            return jsonify({
+                "success": False, 
+                "error": "Payments are not configured in this app version. Please contact support or the administrator."
+            })
+
         session = dodo_client.checkout_sessions.create(
             product_cart=[
                 {
