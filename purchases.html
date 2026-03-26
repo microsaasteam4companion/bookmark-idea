@@ -15,6 +15,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Purchases - CtrlSense</title>
   <style>
+
+    /* SYNCED NAVBAR CSS */
+    :root {
+      --bg: #141419; --bg2: #1c1c23; --surface: #1e1e27; --border: rgba(255, 255, 255, 0.07);
+      --ink: #e4e4f0; --ink2: #9191a8; --accent: #a78bfa; --font: 'Inter', sans-serif;
+    }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 56px; display: flex; align-items: center; padding: 0 32px; transition: all 0.25s; background: rgba(20, 20, 25, 0.88); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); }
+    .nav-logo { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--ink); text-decoration: none; }
+    .nav-logo-box { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .nav-logo-box img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.8); }
+    .nav-mid { flex: 1; display: flex; justify-content: center; gap: 2px; }
+    .nav-mid a { font-size: 13.5px; color: var(--ink2); text-decoration: none; padding: 5px 12px; border-radius: 6px; transition: 0.15s; }
+    .nav-mid a:hover { color: var(--ink); background: var(--bg2); }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .auth-btn { background: var(--accent); color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .auth-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    .user-menu { position: relative; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+    .user-name { font-size: 13px; font-weight: 600; color: var(--ink); max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-dropdown { position: absolute; top: 44px; right: 0; background: #1a1a24; border: 1px solid var(--border); border-radius: 10px; min-width: 180px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4); display: none; overflow: hidden; }
+    .user-dropdown.active { display: block; }
+    .user-dropdown a, .user-dropdown button { display: block; width: 100%; text-align: left; padding: 12px 16px; font-size: 13px; color: #c8c8d8; background: none; border: none; cursor: pointer; text-decoration: none; transition: 0.15s; }
+    .user-dropdown a:hover, .user-dropdown button:hover { background: rgba(167, 139, 250, 0.1); color: #fff; }
+    .user-dropdown .dd-divider { height: 1px; background: rgba(255, 255, 255, 0.06); margin: 4px 0; }
+    .theme-btn { background: none; border: none; color: var(--ink2); cursor: pointer; padding: 6px; border-radius: 6px; transition: 0.2s; display: flex; align-items: center; }
+    .theme-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    .nav-burger { display: none; background: none; border: none; color: var(--ink); cursor: pointer; padding: 8px; z-index: 250; }
+    .mobile-menu { position: fixed; top: 0; right: -100%; width: 280px; height: 100vh; background: var(--bg2); z-index: 245; padding: 80px 32px; transition: 0.4s; border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 24px; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+    .mobile-menu.active { right: 0; }
+    .mobile-menu a { font-size: 18px; color: var(--ink); text-decoration: none; }
+    .mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 240; opacity: 0; pointer-events: none; transition: 0.4s; backdrop-filter: blur(4px); }
+    .mobile-overlay.active { opacity: 1; pointer-events: auto; }
+    @media(max-width:768px) { .nav-mid { display: none !important; } .nav-burger { display: block; } .auth-btn, .nav-btn-solid { display: none !important; } }
+    .nav-btn-solid { background: var(--ink); color: var(--bg); padding: 6px 16px; border-radius: 7px; font-size: 13px; font-weight: 500; text-decoration: none; }
+
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #141419; color: #c8c8d8; padding: 48px 24px; line-height: 1.7; max-width: 900px; margin: 0 auto; }
     a { color: #a78bfa; text-decoration: none; }
@@ -119,10 +155,10 @@
   
   
   
+  
   <nav id="nav">
     <a href="/" class="nav-logo">
       <div class="nav-logo-box" style="background:transparent; overflow:hidden;"><img src="/ctrlsense_logo.png"
-          style="width:100%;height:100%;border-radius:inherit;object-fit:cover; transform:scale(1.8);"
           alt="CtrlSense Logo"></div>
       CtrlSense
     </a>
@@ -136,19 +172,10 @@
     <div class="nav-right" style="display: flex; align-items: center; gap: 12px;">
       <button class="theme-btn" id="theme-btn" title="Toggle light/dark">
         <svg id="theme-icon" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="5" />
-          <line x1="12" y1="1" x2="12" y2="3" />
-          <line x1="12" y1="21" x2="12" y2="23" />
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-          <line x1="1" y1="12" x2="3" y2="12" />
-          <line x1="21" y2="12" x2="23" y2="12" />
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          <circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y2="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
         </svg>
       </button>
 
-      <!-- Auth Buttons -->
       <button class="auth-btn" id="auth-signin-btn" onclick="openAuthModal()">Sign In</button>
       <div class="user-menu" id="user-menu" style="display: none;" onclick="toggleUserDropdown(event)">
         <img class="user-avatar" id="user-avatar" src="" alt="User">
@@ -166,6 +193,18 @@
       </button>
     </div>
   </nav>
+
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="/#pipeline">How it works</a>
+    <a href="/#features">Features</a>
+    <a href="/docs">Docs</a>
+    <a href="/blogs">Blogs</a>
+    <a href="/purchases" id="mobile-purchases-link" style="display: none;">My Purchases</a>
+    <a href="/#download" id="mobile-dl-link">Download Now</a>
+    <div id="mobile-auth-section" style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border);"></div>
+  </div>
+
 
   <div class="mobile-overlay" id="mobile-overlay"></div>
   <div class="mobile-menu" id="mobile-menu">
@@ -264,51 +303,13 @@
         document.getElementById('dash-email').textContent = user.email;
 
         // Check for payment redirect parameters (Dodo Payments)
-        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id') || urlParams.get('checkout_id') || urlParams.get('checkout_session_id') || urlParams.get('session_id') || urlParams.get('transaction_id');
+        const status = urlParams.get('status') || urlParams.get('checkout_status') || urlParams.get('payment_status');
         
-        // Dodo Payments can send payment_id, checkout_id, or session_id
-        const status = urlParams.get('status') || urlParams.get('checkout_status');
-        const paymentId = urlParams.get('payment_id') || urlParams.get('checkout_id') || urlParams.get('checkout_session_id') || urlParams.get('session_id');
-        const licenseKey = urlParams.get('license_key');
-        
-        console.log('Payment Redirect Check:', { status, paymentId, licenseKey, allParams: Object.fromEntries(urlParams) });
+        console.log('Payment Redirect Check:', { status, paymentId, allParams: Object.fromEntries(urlParams) });
 
-        if (paymentId && (status === 'succeeded' || status === 'completed' || !status)) {
-          // Visual feedback
-          const list = document.getElementById('purchases-list');
-          list.innerHTML = `<div class="empty-state"><h3>✨ Finalizing your Pro Upgrade...</h3><p>Please wait a moment while we secure your license key.</p></div>`;
-          
-          console.log('Valid payment detected, recording to Firestore...');
-          
-          // Fallback license key if missing from URL
-          const finalLicenseKey = licenseKey || 'PRO-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-          
-          const purchaseData = {
-            uid: user.uid,
-            paymentId: paymentId,
-            licenseKey: finalLicenseKey,
-            amount: urlParams.get('amount') || '399',
-            currency: urlParams.get('currency') || 'INR',
-            status: 'active',
-            source: 'dodo_payments',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          };
-
-          db.collection('purchases').doc(paymentId).set(purchaseData).then(() => {
-            console.log('Purchase recorded successfully:', paymentId);
-            // Remove params from URL to avoid double-processing
-            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
-            
-            alert('🎉 Congratulations! Your CtrlSense Pro license has been activated.');
-            loadPurchases(user.uid);
-          }).catch(err => {
-            console.error('Error recording purchase:', err);
-            loadPurchases(user.uid);
-          });
-        } else if (urlParams.has('status') && urlParams.get('status') !== 'succeeded') {
-           console.warn('Payment not successful or cancelled:', status);
-           loadPurchases(user.uid);
+        if (paymentId && (status === 'succeeded' || status === 'completed' || status === 'paid' || !status)) {
+          recordPurchase(user.uid, paymentId, urlParams);
         } else {
           loadPurchases(user.uid);
         }
@@ -318,57 +319,85 @@
       }
     });
 
+    function recordPurchase(uid, paymentId, urlParams) {
+      const list = document.getElementById('purchases-list');
+      list.innerHTML = `<div class="empty-state"><h3>✨ Finalizing your Pro Upgrade...</h3><p>Please wait a moment while we secure your license key.</p></div>`;
+      
+      const licenseKey = urlParams.get('license_key') || 'PRO-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+      
+      const purchaseData = {
+        uid: uid,
+        paymentId: paymentId,
+        licenseKey: licenseKey,
+        amount: urlParams.get('amount') || '5',
+        currency: urlParams.get('currency') || 'USD',
+        status: 'active',
+        source: 'dodo_payments',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      db.collection('purchases').doc(paymentId).set(purchaseData).then(() => {
+        alert('🎉 Congratulations! Your CtrlSense Pro license has been activated.');
+        // Clean URL
+        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+        loadPurchases(uid);
+      }).catch(err => {
+        console.error('Error recording:', err);
+        loadPurchases(uid);
+      });
+    }
+
     function loadPurchases(uid) {
       const list = document.getElementById('purchases-list');
 
-      // Removed .orderBy() to avoid requiring a composite index in Firestore
       db.collection('purchases').where('uid', '==', uid).get()
         .then(snapshot => {
           if (snapshot.empty) {
             list.innerHTML = `
               <div class="empty-state">
-                <h3>No purchases yet</h3>
-                <p>When you upgrade to Pro, your license key and receipt will appear here.</p>
-                <a href="index.html#download" style="color: #a78bfa; font-size: 14px;">← Explore CtrlSense Pro</a>
+                <h3>No purchases found for this account</h3>
+                <p>If you just paid, please check your email for the receipt or click Sync below.</p>
+                <div style="margin-top:20px; display:flex; gap:10px; justify-content:center;">
+                  <button onclick="window.location.reload()" style="background:#2a2a35; color:#fff; border:1px solid #444; padding:8px 16px; border-radius:6px; cursor:pointer;">🔄 Refresh</button>
+                  <button onclick="manualSync()" style="background:#a78bfa; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">🔗 Sync via Payment ID</button>
+                </div>
+                <p style="margin-top:24px; font-size:12px;"><a href="index.html#download">← Need to upgrade? View Plans</a></p>
               </div>`;
             return;
           }
 
           let purchases = [];
           snapshot.forEach(doc => purchases.push(doc.data()));
-          
-          // Sort locally by createdAt descending
-          purchases.sort((a, b) => {
-            const timeA = a.createdAt?.seconds || 0;
-            const timeB = b.createdAt?.seconds || 0;
-            return timeB - timeA;
-          });
+          purchases.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
           let html = '';
           purchases.forEach(p => {
-            const date = p.createdAt ? new Date(p.createdAt.seconds * 1000).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
-            const statusClass = p.status === 'active' ? 'status-active' : 'status-pending';
-
+            const date = p.createdAt ? new Date(p.createdAt.seconds * 1000).toLocaleDateString() : 'Active';
             html += `
               <div class="purchase-card">
                 <div class="purchase-info">
                   <h3>CtrlSense Pro License</h3>
-                  <p>Purchased on ${date} · ${p.currency || 'INR'} ${p.amount || '399'}</p>
-                  <span class="status-badge ${statusClass}">${p.status || 'active'}</span>
+                  <p>Status: <span class="status-badge status-active">Active</span> · ${date}</p>
                 </div>
                 <div class="purchase-key">
                   <span>${p.licenseKey || '—'}</span>
-                  <button class="copy-btn" onclick="copyKey('${p.licenseKey || ''}')" title="Copy key">📋</button>
+                  <button class="copy-btn" onclick="copyKey('${p.licenseKey}')">📋</button>
                 </div>
               </div>`;
           });
-
           list.innerHTML = html;
-        })
-        .catch(err => {
-          console.error('Firestore error:', err);
-          list.innerHTML = `<div class="empty-state"><h3>No purchases yet</h3><p>When you upgrade to Pro, your license key will appear here.</p></div>`;
         });
+    }
+
+    function manualSync() {
+      const pid = prompt("Enter your Payment ID or Checkout Session ID (from your receipt email):");
+      if (pid && pid.trim()) {
+        const user = firebase.auth().currentUser;
+        if(user) {
+           recordPurchase(user.uid, pid.trim(), new URLSearchParams());
+        }
+      }
     }
 
     function copyKey(key) {
