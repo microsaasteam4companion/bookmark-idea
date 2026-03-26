@@ -3033,7 +3033,8 @@
             <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fff;"><span
                 style="color: var(--accent);">✦</span> Custom Background Watch Folder</li>
           </ul>
-          <a id="pro-upgrade-link" href="https://test.checkout.dodopayments.com/buy/pdt_0NbH8qheEqFDGTInPAlTP?quantity=1" target="_blank"
+          <a id="pro-upgrade-link"
+            href="https://test.checkout.dodopayments.com/buy/pdt_0NbH8qheEqFDGTInPAlTP?quantity=1" target="_blank"
             style="display: block; text-align: center; background: var(--accent); color: var(--bg); padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none; transition: 0.15s; box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);">Upgrade
             to Pro</a>
           <script>
@@ -3042,7 +3043,7 @@
               let baseUrl = window.location.href.split('?')[0].split('#')[0];
               if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
               if (baseUrl.endsWith('index.html')) baseUrl = baseUrl.replace('/index.html', '');
-              
+
               const redirectUrl = baseUrl + '/purchases.html';
               // Add both redirect_url and return_url for maximum compatibility with Dodo
               upgradeBtn.href += "&redirect_url=" + encodeURIComponent(redirectUrl) + "&return_url=" + encodeURIComponent(redirectUrl);
