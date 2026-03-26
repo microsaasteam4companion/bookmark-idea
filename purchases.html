@@ -148,6 +148,17 @@
     .nav-logo-box { width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
     .nav-logo-box img { width:100%; height:100%; object-fit:cover; }
 
+    /* MOBILE ADJUSTMENTS */
+    @media (max-width: 600px) {
+      body { padding: 24px 16px; }
+      h1 { font-size: 24px; }
+      .user-bar { flex-direction: column; text-align: center; padding: 20px; }
+      .user-bar img { width: 60px; height: 60px; }
+      .signout-link { margin: 12px 0 0 0; }
+      .purchase-card { flex-direction: column; align-items: flex-start; gap: 20px; padding: 16px; }
+      .purchase-key { width: 100%; justify-content: space-between; }
+      .container { padding-top: 80px; }
+    }
   </style>
 </head>
 <body>
@@ -282,6 +293,7 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const urlParams = new URLSearchParams(window.location.search);
 
     const loginPrompt = document.getElementById('login-prompt');
     const dashboard = document.getElementById('dashboard');
@@ -349,10 +361,26 @@
     }
 
     function loadPurchases(uid) {
+      console.log('[Purchases] Starting fetch for UID:', uid);
       const list = document.getElementById('purchases-list');
+      
+      // Safety timeout
+      const timeout = setTimeout(() => {
+        if (list.innerHTML.includes('Loading purchases...')) {
+          console.warn('[Purchases] Fetch taking too long, showing fallback.');
+          list.innerHTML = `
+            <div class="empty-state">
+              <h3>Still loading...</h3>
+              <p>The database is taking longer than expected. Please check your console for errors.</p>
+              <button onclick="window.location.reload()" style="margin-top:10px; background:#444; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">🔄 Refresh Page</button>
+            </div>`;
+        }
+      }, 8000);
 
       db.collection('purchases').where('uid', '==', uid).get()
         .then(snapshot => {
+          clearTimeout(timeout);
+          console.log('[Purchases] Fetch complete, items found:', snapshot.size);
           if (snapshot.empty) {
             list.innerHTML = `
               <div class="empty-state">
