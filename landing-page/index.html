@@ -2419,7 +2419,7 @@
       <a href="#pipeline">How it works</a>
       <a href="#features">Features</a>
       <a href="docs.html">Docs</a>
-      <a href="blogs/index.html">Blogs</a>
+      <a href="blogs/">Blogs</a>
       <a href="#download">Download</a>
     </div>
     <div class="nav-right" style="display: flex; align-items: center; gap: 12px;">
@@ -2436,6 +2436,20 @@
           <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
         </svg>
       </button>
+
+      <!-- Auth Buttons -->
+      <button class="auth-btn" id="auth-signin-btn" onclick="openAuthModal()">Sign In</button>
+      <div class="user-menu" id="user-menu" style="display: none;" onclick="toggleUserDropdown(event)">
+        <img class="user-avatar" id="user-avatar" src="" alt="User">
+        <span class="user-name" id="user-name"></span>
+        <div class="user-dropdown" id="user-dropdown">
+          <a href="purchases.html">🛒 My Purchases</a>
+          <div class="dd-divider"></div>
+          <button onclick="signOutUser()">🚪 Sign Out</button>
+        </div>
+      </div>
+      <a href="#download" class="nav-btn nav-btn-solid">Download Now</a>
+
       <button class="nav-burger" id="burger-btn">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
@@ -2447,30 +2461,12 @@
     <a href="#pipeline">How it works</a>
     <a href="#features">Features</a>
     <a href="docs.html">Docs</a>
-    <a href="blogs/index.html">Blogs</a>
+    <a href="blogs/">Blogs</a>
     <a href="#download" id="mobile-dl-link">Download</a>
     <div id="mobile-auth-section" style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border);">
        <!-- Auth content injected via JS -->
     </div>
   </div>
-
-      <!-- Auth: Signed Out -->
-      <button class="auth-btn" id="auth-signin-btn" onclick="openAuthModal()">Sign In</button>
-
-      <!-- Auth: Signed In -->
-      <div class="user-menu" id="user-menu" style="display: none;" onclick="toggleUserDropdown(event)">
-        <img class="user-avatar" id="user-avatar" src="" alt="User">
-        <span class="user-name" id="user-name"></span>
-        <div class="user-dropdown" id="user-dropdown">
-          <a href="purchases.html">🛒 My Purchases</a>
-          <div class="dd-divider"></div>
-          <button onclick="signOutUser()">🚪 Sign Out</button>
-        </div>
-      </div>
-
-      <a href="#download" class="nav-btn nav-btn-solid">Download Now</a>
-    </div>
-  </nav>
 
   <!-- HERO -->
   <section class="hero">
