@@ -1,0 +1,4203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CtrlSense — Local AI Document Search</title>
+  <meta name="description" content="CtrlSense — Local AI Document Search. Fast, offline, and 100% private semantic search for your documents using advanced vector embeddings." />
+  <meta name="keywords" content="local ai, document search, semantic search, privacy ai, offline search, ctrlsense, vector embeddings, chromadb" />
+  <meta property="og:title" content="CtrlSense — Local Document Search" />
+  <meta property="og:description" content="Search your documents by meaning, not just keywords. 100% private and offline." />
+  <meta property="og:image" content="ctrlsense_logo.png" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CtrlSense",
+    "operatingSystem": "Windows 10, Windows 11",
+    "applicationCategory": "ProductivityApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "5.00",
+      "priceCurrency": "USD"
+    },
+    "description": "Local AI Document Search. Fast, offline, and 100% private semantic search."
+  }
+  </script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #141419;
+      --bg2: #1c1c23;
+      --surface: #1e1e27;
+      --border: rgba(255, 255, 255, 0.07);
+      --border2: rgba(255, 255, 255, 0.12);
+      --ink: #e4e4f0;
+      --ink2: #9191a8;
+      --ink3: #55556a;
+      --accent: #a78bfa;
+      --accent-light: rgba(167, 139, 250, 0.12);
+      --accent-mid: #8b5cf6;
+      --blue: #60a5fa;
+      --blue-light: rgba(96, 165, 250, 0.1);
+      --green: #34d399;
+      --green-light: rgba(52, 211, 153, 0.1);
+      --amber: #fbbf24;
+      --amber-light: rgba(251, 191, 36, 0.1);
+      --red: #f87171;
+      --red-light: rgba(248, 113, 113, 0.1);
+      --gold: #f59e0b;
+      --gold-light: rgba(245, 158, 11, 0.12);
+      --orange: #fb923c;
+      --orange-light: rgba(251, 146, 60, 0.1);
+      --font: 'Inter', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --r: 10px;
+      --r-lg: 16px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      border-bottom: 1px solid transparent;
+      transition: all 0.25s;
+      background: rgba(20, 20, 25, 0);
+    }
+
+    nav.scrolled {
+      background: rgba(20, 20, 25, 0.88);
+      border-bottom-color: var(--border);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.2px;
+    }
+
+    .nav-logo-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-logo-box svg {
+      width: 13px;
+      height: 13px;
+      fill: white;
+    }
+
+    .nav-mid {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .nav-mid a {
+      font-size: 13.5px;
+      color: var(--ink2);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+
+    .nav-mid a:hover {
+      color: var(--ink);
+      background: var(--bg2);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* MOBILE MENU STYLES */
+    .nav-burger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 8px;
+      z-index: 250;
+      margin-left: 8px;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 280px;
+      height: 100vh;
+      background: var(--bg2);
+      z-index: 245;
+      padding: 80px 32px;
+      transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+
+    .mobile-menu.active {
+      right: 0;
+    }
+
+    .mobile-menu a {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    
+    .mobile-menu a:hover {
+      color: var(--accent);
+    }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 240;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.4s;
+      backdrop-filter: blur(4px);
+    }
+
+    .mobile-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media(max-width:768px) {
+      .nav-mid {
+        display: none !important;
+      }
+      .nav-burger {
+        display: block;
+      }
+      .nav-right {
+        /* gap: 8px; */
+      }
+      .auth-btn, .user-menu {
+          display: none !important;
+      }
+      .theme-btn {
+          margin-right: 0;
+      }
+    }
+
+    .nav-btn {
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 7px;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .nav-btn-ghost {
+      color: var(--ink2);
+      border: 1px solid var(--border2);
+    }
+
+    .nav-btn-ghost:hover {
+      color: var(--ink);
+    }
+
+    .nav-btn-solid {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .nav-btn-solid:hover {
+      background: #cccce0;
+      transform: translateY(-1px);
+    }
+
+    /* AUTH UI */
+    .auth-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .auth-btn:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    .user-menu {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      object-fit: cover;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 44px;
+      right: 0;
+      background: #1a1a24;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-width: 180px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      z-index: 999;
+      display: none;
+      overflow: hidden;
+    }
+
+    .user-dropdown.open {
+      display: block;
+    }
+
+    .user-dropdown a,
+    .user-dropdown button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #c8c8d8;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.15s;
+    }
+
+    .user-dropdown a:hover,
+    .user-dropdown button:hover {
+      background: rgba(167, 139, 250, 0.1);
+      color: #fff;
+    }
+
+    .user-dropdown .dd-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      margin: 4px 0;
+    }
+
+    /* Auth Modal */
+    .auth-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .auth-modal-backdrop.open {
+      display: flex;
+    }
+
+    .auth-modal {
+      background: #1a1a24;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .auth-modal h3 {
+      color: #fff;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .auth-modal p {
+      color: var(--ink2);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .auth-google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #333;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .auth-google-btn:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .auth-google-btn img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--ink3);
+      font-size: 12px;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg2, #0f0f15);
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+    }
+
+    .auth-input:focus {
+      border-color: var(--accent);
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .auth-submit:hover {
+      filter: brightness(1.15);
+    }
+
+    .auth-toggle {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--ink2);
+    }
+
+    .auth-toggle a {
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .auth-error {
+      color: #f87171;
+      font-size: 13px;
+      margin-top: 8px;
+      min-height: 18px;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 120px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(167, 139, 250, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 28px;
+      animation: up 0.5s ease both;
+    }
+
+    .hero-kicker-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 700;
+      letter-spacing: -2.5px;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 20px;
+      animation: up 0.5s 0.05s ease both;
+      opacity: 0;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--ink2);
+      max-width: 460px;
+      margin: 0 auto 36px;
+      line-height: 1.75;
+      animation: up 0.5s 0.1s ease both;
+      opacity: 0;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: up 0.5s 0.15s ease both;
+      opacity: 0;
+    }
+
+    .hbtn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .hbtn-dark {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .hbtn-dark:hover {
+      background: #cccce0;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(228, 228, 240, 0.12);
+    }
+
+    .hbtn-dark svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--bg);
+    }
+
+    .hbtn-light {
+      background: var(--surface);
+      color: var(--ink2);
+      border: 1px solid var(--border2);
+    }
+
+    .hbtn-light:hover {
+      color: var(--ink);
+    }
+
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* HERO APP WINDOW */
+    .demo-wrap {
+      max-width: 820px;
+      margin: 56px auto 0;
+      animation: up 0.6s 0.2s ease both;
+      opacity: 0;
+      position: relative;
+    }
+
+    .demo-glow {
+      position: absolute;
+      inset: -1px;
+      border-radius: calc(var(--r-lg)+1px);
+      background: linear-gradient(135deg, rgba(167, 139, 250, 0.25), rgba(96, 165, 250, 0.15), rgba(52, 211, 153, 0.1));
+      z-index: -1;
+    }
+
+    .demo-window {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .demo-bar {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ddot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dd-r {
+      background: #ff5f57;
+    }
+
+    .dd-y {
+      background: #febc2e;
+    }
+
+    .dd-g {
+      background: #28c840;
+    }
+
+    .demo-bar-title {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink3);
+      font-family: var(--mono);
+    }
+
+    .demo-body {
+      display: flex;
+      height: 340px;
+    }
+
+    .demo-sb {
+      width: 180px;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      padding: 14px 10px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .demo-sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 8px;
+      margin-bottom: 10px;
+    }
+
+    .dsb-ic {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--accent);
+    }
+
+    .dsb-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .dni {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 9px;
+      border-radius: 6px;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .dni.on {
+      background: var(--accent-light);
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .dni:not(.on) {
+      color: var(--ink3);
+    }
+
+    .dni-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 3px;
+      background: currentColor;
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    .demo-count {
+      margin-top: auto;
+      background: rgba(167, 139, 250, 0.06);
+      border: 1px solid rgba(167, 139, 250, 0.12);
+      border-radius: 7px;
+      padding: 8px 10px;
+      font-size: 11px;
+      color: var(--ink3);
+    }
+
+    .demo-count b {
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    .demo-main {
+      flex: 1;
+      padding: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .demo-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .ddot2 {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--border2);
+      transition: all 0.25s;
+    }
+
+    .ddot2.on {
+      background: var(--accent);
+      transform: scale(1.3);
+    }
+
+    .demo-search {
+      background: var(--bg2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .demo-search.lit {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+    }
+
+    .ds-icon {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    #ddemo {
+      flex: 1;
+      font-size: 12px;
+      color: var(--ink2);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .dcur {
+      display: inline-block;
+      width: 1.5px;
+      height: 12px;
+      background: var(--accent);
+      margin-left: 1px;
+      vertical-align: middle;
+      animation: cb 0.9s ease-in-out infinite;
+    }
+
+    @keyframes cb {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .demo-spin {
+      display: none;
+      align-items: center;
+      gap: 7px;
+      font-size: 11.5px;
+      color: var(--ink3);
+    }
+
+    .demo-spin.on {
+      display: flex;
+    }
+
+    .dsp {
+      width: 11px;
+      height: 11px;
+      border: 2px solid var(--border2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: sp 0.65s linear infinite;
+    }
+
+    @keyframes sp {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .demo-results {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .dr {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.4s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .dr.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .dr-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-family: var(--mono);
+      font-weight: 600;
+    }
+
+    .dr-badge.pdf {
+      background: var(--red-light);
+      color: var(--red);
+      border: 1px solid rgba(248, 113, 113, 0.25);
+    }
+
+    .dr-badge.txt {
+      background: var(--green-light);
+      color: var(--green);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+    }
+
+    .dr-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .dr-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dr-snip {
+      font-size: 11px;
+      color: var(--ink3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .dr-pct {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    /* PIPELINE SECTION */
+    .pipeline-section {
+      padding: 120px 24px;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pipeline-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .pipe-head {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .section-eyebrow {
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .section-h {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .section-p {
+      font-size: 16px;
+      color: var(--ink2);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .pipe-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .pipe-step {
+      display: grid;
+      grid-template-columns: 1fr 64px 1fr;
+      align-items: center;
+      min-height: 220px;
+    }
+
+    .pipe-step:nth-child(even) .ps-visual {
+      order: 1;
+    }
+
+    .pipe-step:nth-child(even) .ps-connector {
+      order: 2;
+    }
+
+    .pipe-step:nth-child(even) .ps-text {
+      order: 3;
+    }
+
+    .ps-text {
+      padding: 32px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .ps-text.vis {
+      opacity: 1;
+      transform: none;
+    }
+
+    .ps-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .ps-title {
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      margin-bottom: 10px;
+    }
+
+    .ps-desc {
+      font-size: 14px;
+      color: var(--ink2);
+      line-height: 1.7;
+      max-width: 340px;
+    }
+
+    .ps-detail {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--ink3);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-family: var(--mono);
+    }
+
+    .ps-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 4px;
+    }
+
+    .pc-line {
+      flex: 1;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--border2), transparent);
+    }
+
+    .pc-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: var(--bg2);
+      flex-shrink: 0;
+    }
+
+    .ps-visual {
+      padding: 20px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .ps-visual.vis {
+      opacity: 1;
+      transform: none;
+    }
+
+    .vis-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .embed-doc-line {
+      height: 6px;
+      background: var(--bg);
+      border-radius: 2px;
+    }
+
+    /* New step accent colors */
+    .ps-num.gold {
+      color: var(--gold);
+    }
+
+    .ps-num.orange {
+      color: var(--orange);
+    }
+
+    .ps-num.blue {
+      color: var(--blue);
+    }
+
+    .pc-dot.gold {
+      border-color: var(--gold);
+    }
+
+    .pc-dot.orange {
+      border-color: var(--orange);
+    }
+
+    .pc-dot.blue {
+      border-color: var(--blue);
+    }
+
+    .ps-detail.gold {
+      color: var(--gold);
+    }
+
+    .ps-detail.orange {
+      color: var(--orange);
+    }
+
+    .ps-detail.blue {
+      color: var(--blue);
+    }
+
+    /* Golden highlight pulse */
+    @keyframes glowPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.25);
+      }
+    }
+
+    @keyframes glowPulseText {
+
+      0%,
+      100% {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--gold);
+      }
+
+      50% {
+        background: rgba(245, 158, 11, 0.35);
+        color: #fff;
+      }
+    }
+
+    /* FEATURES */
+    .feat-strip {
+      padding: 80px 24px;
+      background: var(--bg);
+    }
+
+    .feat-strip-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .feat-strip-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+
+    .fs-card {
+      background: var(--surface);
+      padding: 28px;
+      transition: background 0.15s;
+    }
+
+    .fs-card:hover {
+      background: var(--bg2);
+    }
+
+    .fs-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fs-icon.purple {
+      background: var(--accent-light);
+    }
+
+    .fs-icon.blue {
+      background: var(--blue-light);
+    }
+
+    .fs-icon.green {
+      background: var(--green-light);
+    }
+
+    .fs-icon.amber {
+      background: var(--amber-light);
+    }
+
+    .fs-icon.red {
+      background: var(--red-light);
+    }
+
+    .fs-icon.gray {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .fs-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .fs-icon.purple svg {
+      stroke: var(--accent);
+    }
+
+    .fs-icon.blue svg {
+      stroke: var(--blue);
+    }
+
+    .fs-icon.green svg {
+      stroke: var(--green);
+    }
+
+    .fs-icon.amber svg {
+      stroke: var(--amber);
+    }
+
+    .fs-icon.red svg {
+      stroke: var(--red);
+    }
+
+    .fs-icon.gray svg {
+      stroke: var(--ink2);
+    }
+
+    .fs-title {
+      font-size: 14.5px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      letter-spacing: -0.2px;
+    }
+
+    .fs-text {
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.65;
+    }
+
+    /* DOWNLOAD */
+    .dl-section {
+      padding: 100px 24px;
+      background: var(--bg);
+    }
+
+    .dl-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .dl-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      margin-bottom: 14px;
+    }
+
+    .dl-sub {
+      font-size: 16px;
+      color: var(--ink2);
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    .dl-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .dl-btn-main {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .dl-btn-main:hover {
+      background: #cccce0;
+      transform: translateY(-1px);
+    }
+
+    .dl-btn-main svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--bg);
+    }
+
+    .dl-btn-sec {
+      background: var(--surface);
+      color: var(--ink2);
+      border: 1px solid var(--border2);
+    }
+
+    .dl-btn-sec:hover {
+      color: var(--ink);
+    }
+
+    .dl-chips {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .dl-chip {
+      font-size: 12px;
+      color: var(--ink3);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-family: var(--mono);
+    }
+
+    .dl-note {
+      font-size: 13px;
+      color: var(--ink3);
+    }
+
+    .dl-note a {
+      color: var(--ink2);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    footer {
+      padding: 28px 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg2);
+    }
+
+    .fl {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink2);
+    }
+
+    .fl-ic {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      background: var(--accent);
+    }
+
+    .fr a {
+      font-size: 13px;
+      color: var(--ink3);
+      text-decoration: none;
+      margin-left: 18px;
+      transition: color 0.15s;
+    }
+
+    .fr a:hover {
+      color: var(--ink2);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.vis {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* SCROLL PROGRESS */
+    #scroll-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--blue), var(--green));
+      width: 0%;
+      z-index: 300;
+      transition: width 0.1s linear;
+      border-radius: 0 1px 1px 0;
+    }
+
+    /* THEME TOGGLE */
+    .theme-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink2);
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .theme-btn:hover {
+      background: var(--bg2);
+      color: var(--ink);
+    }
+
+    .theme-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    /* LIGHT MODE OVERRIDES */
+    body.light {
+      --bg: #f8f8fc;
+      --bg2: #f0f0f7;
+      --surface: #ffffff;
+      --border: rgba(0, 0, 0, 0.07);
+      --border2: rgba(0, 0, 0, 0.12);
+      --ink: #16161e;
+      --ink2: #5a5a72;
+      --ink3: #9191a8;
+      --accent: #7c3aed;
+      --accent-light: rgba(124, 58, 237, 0.08);
+      --blue: #2563eb;
+      --blue-light: rgba(37, 99, 235, 0.08);
+      --green: #059669;
+      --green-light: rgba(5, 150, 105, 0.08);
+      --amber: #d97706;
+      --amber-light: rgba(217, 119, 6, 0.08);
+      --red: #dc2626;
+      --red-light: rgba(220, 38, 38, 0.08);
+      --gold: #b45309;
+      --gold-light: rgba(180, 83, 9, 0.1);
+      --orange: #ea580c;
+      --orange-light: rgba(234, 88, 12, 0.08);
+    }
+
+    body.light nav.scrolled {
+      background: rgba(248, 248, 252, 0.9);
+    }
+
+    body.light .demo-window {
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    }
+
+    body.light #loader {
+      background: #f8f8fc;
+    }
+
+    body.light #loader canvas {
+      filter: none;
+    }
+
+    /* AURORA HERO BG */
+    #aurora {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    #aurora canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.55;
+    }
+
+    /* STATS COUNTER STRIP */
+    .stats-strip {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      padding: 28px 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      font-family: var(--mono);
+    }
+
+    .stat-num span {
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--ink3);
+      margin-top: 2px;
+      letter-spacing: 0.04em;
+    }
+
+    /* TRY IT LIVE */
+    .try-section {
+      padding: 80px 24px;
+      background: var(--bg);
+    }
+
+    .try-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .try-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .try-bar {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .try-bar-title {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: var(--ink3);
+      font-family: var(--mono);
+    }
+
+    .try-search-row {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .try-input {
+      flex: 1;
+      background: var(--bg2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 13px;
+      font-size: 13px;
+      color: var(--ink);
+      font-family: var(--font);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .try-input:focus {
+      border-color: var(--accent);
+    }
+
+    .try-input::placeholder {
+      color: var(--ink3);
+    }
+
+    .try-go {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .try-go:hover {
+      background: var(--accent-mid);
+      transform: translateY(-1px);
+    }
+
+    .try-results {
+      padding: 12px 16px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .try-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
+      gap: 8px;
+      color: var(--ink3);
+      font-size: 13px;
+    }
+
+    .try-result {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .try-result.in {
+      opacity: 1;
+      transform: none;
+    }
+
+    .try-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 5px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7.5px;
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+
+    .try-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .try-name {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .try-snip {
+      font-size: 11px;
+      color: var(--ink3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .try-pct {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      font-family: var(--mono);
+      flex-shrink: 0;
+    }
+
+    .try-searching {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      font-size: 12px;
+      color: var(--ink3);
+    }
+
+    .try-spin {
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid var(--border2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: sp 0.65s linear infinite;
+    }
+
+    .try-tags {
+      padding: 0 16px 14px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .try-tag {
+      font-size: 11.5px;
+      color: var(--ink3);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--mono);
+    }
+
+    .try-tag:hover {
+      color: var(--accent);
+      border-color: var(--accent-light);
+    }
+
+    /* TESTIMONIALS */
+    .testi-section {
+      padding: 80px 24px;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+    }
+
+    .testi-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .testi-track-wrap {
+      overflow: hidden;
+      position: relative;
+      margin-top: 40px;
+    }
+
+    .testi-track {
+      display: flex;
+      gap: 20px;
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .testi-card {
+      flex-shrink: 0;
+      width: calc(33.33% - 14px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .testi-quote {
+      font-size: 14px;
+      color: var(--ink2);
+      line-height: 1.75;
+      flex: 1;
+    }
+
+    .testi-quote::before {
+      content: '"';
+      color: var(--accent);
+      font-size: 20px;
+      line-height: 1;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .testi-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .testi-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .testi-role {
+      font-size: 11.5px;
+      color: var(--ink3);
+    }
+
+    .testi-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 24px;
+    }
+
+    .testi-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border2);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .testi-dot.on {
+      background: var(--accent);
+      transform: scale(1.3);
+    }
+
+    /* COMPARISON TABLE */
+    .comp-section {
+      padding: 80px 24px;
+      background: var(--bg);
+    }
+
+    .comp-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 40px;
+    }
+
+    .comp-table th {
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink3);
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comp-table th:not(:first-child) {
+      text-align: center;
+    }
+
+    .comp-table td {
+      padding: 14px 16px;
+      font-size: 13.5px;
+      color: var(--ink2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comp-table td:first-child {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .comp-table td:not(:first-child) {
+      text-align: center;
+    }
+
+    .comp-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comp-table tr:hover td {
+      background: var(--surface);
+    }
+
+    .comp-yes {
+      color: var(--green);
+      font-size: 16px;
+    }
+
+    .comp-no {
+      color: var(--ink3);
+      font-size: 16px;
+    }
+
+    .comp-col-head {
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: var(--ink) !important;
+      letter-spacing: 0 !important;
+      text-transform: none !important;
+    }
+
+    .comp-col-head.hl {
+      color: var(--accent) !important;
+    }
+
+    .comp-col-hl {
+      background: var(--accent-light);
+    }
+
+    .comp-table td.comp-col-hl {
+      color: var(--ink);
+    }
+
+    /* BUILT WITH */
+    .built-strip {
+      padding: 48px 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .built-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .built-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink3);
+      margin-bottom: 22px;
+    }
+
+    .built-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .built-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--ink2);
+      font-family: var(--mono);
+      transition: all 0.15s;
+    }
+
+    .built-badge:hover {
+      border-color: var(--border2);
+      color: var(--ink);
+    }
+
+    .built-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* STICKY CTA */
+    #sticky-cta {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      z-index: 150;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    #sticky-cta.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .sticky-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--ink);
+      color: var(--bg);
+      padding: 12px 20px;
+      border-radius: 40px;
+      font-size: 13.5px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .sticky-pill:hover {
+      background: #cccce0;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .sticky-pill svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .sticky-close {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: inherit;
+      font-size: 12px;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+
+    .sticky-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* CTRL+SHIFT+D OVERLAY */
+    #as-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      backdrop-filter: blur(4px);
+    }
+
+    #as-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .as-panel {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 16px;
+      width: min(480px, 90vw);
+      overflow: hidden;
+      transform: scale(0.92) translateY(-12px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+    }
+
+    #as-overlay.show .as-panel {
+      transform: scale(1) translateY(0);
+    }
+
+    .as-search-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .as-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: var(--ink);
+      font-family: var(--font);
+    }
+
+    .as-input::placeholder {
+      color: var(--ink3);
+    }
+
+    .as-results {
+      max-height: 280px;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    .as-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .as-item:hover,
+    .as-item.active {
+      background: var(--accent-light);
+    }
+
+    .as-item-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+
+    .as-item-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      flex: 1;
+    }
+
+    .as-item-pct {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      font-family: var(--mono);
+    }
+
+    .as-footer {
+      padding: 10px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--ink3);
+      font-family: var(--mono);
+    }
+
+    .as-hint {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .as-key {
+      padding: 1px 5px;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 3px;
+      font-size: 10px;
+    }
+
+    @media(max-width:680px) {
+      .testi-card {
+        width: calc(100% - 0px);
+      }
+
+      .comp-table {
+        font-size: 12px;
+      }
+
+      .stats-strip {
+        gap: 24px;
+      }
+
+      .stat-num {
+        font-size: 22px;
+      }
+
+      .nav-mid {
+        display: none;
+      }
+
+      .feat-strip-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pipe-step {
+        grid-template-columns: 1fr;
+      }
+
+      .ps-connector {
+        display: none;
+      }
+
+      .pipe-step:nth-child(even) .ps-visual,
+      .pipe-step:nth-child(even) .ps-connector,
+      .pipe-step:nth-child(even) .ps-text {
+        order: unset;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SCROLL PROGRESS -->
+  <div id="scroll-bar"></div>
+
+  <!-- CTRL+SHIFT+D OVERLAY -->
+  <div id="as-overlay">
+    <div class="as-panel">
+      <div class="as-search-row">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink3)" stroke-width="2"
+          stroke-linecap="round">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input class="as-input" id="as-input" placeholder="Search your documents…" autocomplete="off" />
+        <div id="as-spin"
+          style="display:none;width:12px;height:12px;border:1.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:sp 0.65s linear infinite;flex-shrink:0;">
+        </div>
+      </div>
+      <div class="as-results" id="as-results">
+        <div style="padding:20px;text-align:center;font-size:13px;color:var(--ink3);">Press <kbd
+            style="font-family:var(--mono);padding:1px 5px;background:var(--bg2);border:1px solid var(--border2);border-radius:3px;">Alt</kbd>
+          + <kbd
+            style="font-family:var(--mono);padding:1px 5px;background:var(--bg2);border:1px solid var(--border2);border-radius:3px;">Space</kbd>
+          to open — try typing anything</div>
+      </div>
+      <div class="as-footer">
+        <div class="as-hint"><span class="as-key">Esc</span> to close</div>
+        <span>CtrlSense Spotlight</span>
+        <div class="as-hint"><span class="as-key">↵</span> open file</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY CTA -->
+  <div id="sticky-cta">
+    <a href="#download" class="sticky-pill">
+      <svg viewBox="0 0 24 24">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+      Download free
+      <button class="sticky-close" id="sticky-close"
+        onclick="event.preventDefault();document.getElementById('sticky-cta').classList.remove('show');">✕</button>
+    </a>
+  </div>
+
+  <!-- LOADER -->
+  <div id="loader"
+    style="position:fixed;inset:0;z-index:9999;background:#0d0d12;display:flex;align-items:center;justify-content:center;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:32px;">
+
+      <!-- Animated ring + icon -->
+      <div style="position:relative;width:72px;height:72px;">
+        <canvas id="lc" width="144" height="144" style="position:absolute;inset:0;width:72px;height:72px;"></canvas>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.9)" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="8" y1="13" x2="16" y2="13" />
+            <line x1="8" y1="17" x2="12" y2="17" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Single status word -->
+      <div id="ls"
+        style="font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(145,145,168,0.6);letter-spacing:0.12em;text-transform:uppercase;transition:opacity 0.4s;">
+        initializing</div>
+
+    </div>
+  </div>
+
+  <style>
+    @keyframes lFade {
+      to {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  </style>
+
+  <script>
+    (function () {
+      const loader = document.getElementById('loader');
+      const canvas = document.getElementById('lc');
+      const ctx = canvas.getContext('2d');
+      const statusEl = document.getElementById('ls');
+      const W = 144, H = 144, cx = 72, cy = 72, R = 54;
+      let t = 0, done = false, raf;
+      const words = ['indexing', 'embedding', 'vectorizing', 'ready'];
+      let wi = 0, wt = 0;
+
+      function tick() {
+        if (done) return;
+        raf = requestAnimationFrame(tick);
+        t++;
+        wt++;
+        // cycle status word
+        if (wt > 52 && wi < words.length - 1) {
+          statusEl.style.opacity = '0';
+          setTimeout(() => { wi++; statusEl.textContent = words[wi]; statusEl.style.opacity = '1'; }, 220);
+          wt = 0;
+        }
+
+        ctx.clearRect(0, 0, W, H);
+
+        // — background ring (dim track)
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // — spinning arc
+        const progress = Math.min(1, t / 220);
+        const arcLen = Math.PI * 2 * 0.28; // 28% arc
+        const startAngle = -Math.PI / 2 + t * 0.045;
+        const grad = ctx.createConicalGradient ? null : null; // fallback: solid
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, startAngle, startAngle + arcLen);
+        ctx.strokeStyle = 'rgba(167,139,250,0.85)';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // — leading dot (bright tip)
+        const tipAngle = startAngle + arcLen;
+        ctx.beginPath();
+        ctx.arc(cx + Math.cos(tipAngle) * R, cy + Math.sin(tipAngle) * R, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(167,139,250,1)';
+        ctx.fill();
+
+        // — trailing fade: redraw arc darker behind
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, startAngle, startAngle + arcLen * 0.5);
+        ctx.strokeStyle = 'rgba(96,165,250,0.25)';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // dismiss after "ready" shown for a moment
+        if (wi === words.length - 1 && wt > 38 && !done) {
+          done = true;
+          cancelAnimationFrame(raf);
+          loader.style.transition = 'opacity 0.6s ease';
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 620);
+        }
+      }
+      requestAnimationFrame(tick);
+    })();
+  </script>
+
+  <nav id="nav">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-box" style="background:transparent; overflow:hidden;"><img src="ctrlsense_logo.png"
+          style="width:100%;height:100%;border-radius:inherit;object-fit:cover; transform:scale(1.8);"
+          alt="CtrlSense Logo"></div>
+      CtrlSense
+    </a>
+    <div class="nav-mid">
+      <a href="#pipeline">How it works</a>
+      <a href="#features">Features</a>
+      <a href="docs.html">Docs</a>
+      <a href="blogs/index.html">Blogs</a>
+      <a href="#download">Download</a>
+    </div>
+    <div class="nav-right" style="display: flex; align-items: center; gap: 12px;">
+      <button class="theme-btn" id="theme-btn" title="Toggle light/dark">
+        <svg id="theme-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+      </button>
+      <button class="nav-burger" id="burger-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#pipeline">How it works</a>
+    <a href="#features">Features</a>
+    <a href="docs.html">Docs</a>
+    <a href="blogs/index.html">Blogs</a>
+    <a href="#download" id="mobile-dl-link">Download</a>
+    <div id="mobile-auth-section" style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border);">
+       <!-- Auth content injected via JS -->
+    </div>
+  </div>
+
+      <!-- Auth: Signed Out -->
+      <button class="auth-btn" id="auth-signin-btn" onclick="openAuthModal()">Sign In</button>
+
+      <!-- Auth: Signed In -->
+      <div class="user-menu" id="user-menu" style="display: none;" onclick="toggleUserDropdown(event)">
+        <img class="user-avatar" id="user-avatar" src="" alt="User">
+        <span class="user-name" id="user-name"></span>
+        <div class="user-dropdown" id="user-dropdown">
+          <a href="purchases.html">🛒 My Purchases</a>
+          <div class="dd-divider"></div>
+          <button onclick="signOutUser()">🚪 Sign Out</button>
+        </div>
+      </div>
+
+      <a href="#download" class="nav-btn nav-btn-solid">Download Now</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div id="aurora"><canvas id="aurora-canvas"></canvas></div>
+    <div class="hero-kicker">
+      <div class="hero-kicker-dot"></div>⚡ Fast · Offline · 100% Private
+    </div>
+    <h1>Your documents,<br />found by meaning</h1>
+    <p class="hero-sub">CtrlSense uses a local AI model to search your PDFs and text files by what they mean — not
+      just the words they contain.</p>
+    <div class="hero-btns">
+      <a href="#" onclick="gateDownload(event)" class="hbtn hbtn-dark">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        Download Now
+      </a>
+      <a href="#pipeline" class="hbtn hbtn-light">See how it works →</a>
+    </div>
+
+    <div class="demo-wrap" style="position: relative; perspective: 1200px; margin-top: 48px;">
+      <div class="demo-window-glow"
+        style="position: absolute; width: 300px; height: 300px; background: var(--accent); filter: blur(80px); border-radius: 50%; opacity: 0.25; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; pointer-events: none;">
+      </div>
+      <div class="demo-window"
+        style="transform-style: preserve-3d; transition: transform 0.2s ease-out; background: #181820; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4);">
+        <div class="demo-bar">
+          <div class="ddot dd-r"></div>
+          <div class="ddot dd-y"></div>
+          <div class="ddot dd-g"></div>
+          <div class="demo-bar-title">ctrlsense</div>
+        </div>
+        <div class="demo-body">
+          <div class="demo-sb">
+            <div class="demo-sb-logo">
+              <div class="dsb-ic" style="background:transparent; overflow:hidden;"><img src="ctrlsense_logo.png"
+                  style="width:100%;height:100%;border-radius:inherit;object-fit:cover; transform:scale(1.8);"
+                  alt="CtrlSense Logo"></div>
+              <div class="dsb-name">CtrlSense</div>
+            </div>
+            <div class="dni on" id="dni-s">
+              <div class="dni-dot"></div>Search
+            </div>
+            <div class="dni" id="dni-u">
+              <div class="dni-dot"></div>Upload
+            </div>
+            <div class="dni" id="dni-l">
+              <div class="dni-dot"></div>Library
+            </div>
+            <div class="demo-count"><b id="dcount">12</b> docs indexed</div>
+          </div>
+          <div class="demo-main">
+            <div class="demo-dots">
+              <div class="ddot2 on" id="dd0"></div>
+              <div class="ddot2" id="dd1"></div>
+              <div class="ddot2" id="dd2"></div>
+            </div>
+            <div class="demo-search" id="dsearch">
+              <svg class="ds-icon" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <div id="ddemo"><span class="dcur"></span></div>
+            </div>
+            <div class="demo-spin" id="dspin">
+              <div class="dsp"></div><span>Searching…</span>
+            </div>
+            <div class="demo-results" id="dresults"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- PIPELINE -->
+  <section class="pipeline-section" id="pipeline">
+    <div class="pipeline-inner">
+      <div class="pipe-head reveal">
+        <div class="section-eyebrow">How it works</div>
+        <h2 class="section-h">From file to answer<br />in eight steps</h2>
+        <p class="section-p">Every search goes through the same AI pipeline — plus three system-level upgrades that make
+          it feel like magic. Here's exactly what happens.</p>
+      </div>
+
+      <div class="pipe-steps">
+
+        <!-- STEP 1 — UPLOAD -->
+        <div class="pipe-step">
+          <div class="ps-text" id="pst0">
+            <div class="ps-num">STEP 01</div>
+            <div class="ps-title">You drop in a file</div>
+            <div class="ps-desc">Drag a PDF or TXT file into the app. CtrlSense saves it locally and queues it for
+              processing.</div>
+            <div class="ps-detail">pypdf · UTF-8 text reader</div>
+          </div>
+          <div class="ps-connector">
+            <div class="pc-line"></div>
+            <div class="pc-dot"></div>
+            <div class="pc-line"></div>
+          </div>
+          <div class="ps-visual" id="psv0">
+            <div class="vis-card" style="min-height:220px;">
+              <div id="p1-file"
+                style="position:absolute;top:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:8px 14px;font-size:12px;opacity:0;transition:all 0.5s ease;z-index:2;">
+                <div id="p1-fic"
+                  style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);font-weight:700;">
+                  PDF</div>
+                <span id="p1-fname" style="color:var(--ink);font-weight:500;">Q3_Invoice.pdf</span>
+              </div>
+              <div id="p1-zone"
+                style="border:1.5px dashed var(--border2);border-radius:10px;padding:22px 16px;text-align:center;margin-top:60px;transition:all 0.4s ease;">
+                <svg
+                  style="width:24px;height:24px;display:block;margin:0 auto 8px;stroke:var(--ink3);fill:none;stroke-width:1.5;stroke-linecap:round;"
+                  viewBox="0 0 24 24">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <div style="font-size:12px;color:var(--ink3);" id="p1-label">Drop files here</div>
+              </div>
+              <div id="p1-progress" style="margin-top:12px;opacity:0;transition:opacity 0.3s;">
+                <div
+                  style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-bottom:4px;font-family:var(--mono);">
+                  <span id="p1-ptext">Extracting text…</span><span id="p1-ppct">0%</span>
+                </div>
+                <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden;">
+                  <div id="p1-pbar"
+                    style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:2px;transition:width 0.05s linear;">
+                  </div>
+                </div>
+              </div>
+              <div id="p1-done"
+                style="margin-top:10px;display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--green-light);border:1px solid rgba(52,211,153,0.2);border-radius:7px;opacity:0;transition:opacity 0.3s;font-size:12px;">
+                <svg
+                  style="width:14px;height:14px;stroke:var(--green);fill:none;stroke-width:2.5;stroke-linecap:round;flex-shrink:0;"
+                  viewBox="0 0 24 24">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span id="p1-dname" style="color:var(--green);font-weight:500;">Q3_Invoice.pdf indexed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 — EXTRACT -->
+        <div class="pipe-step">
+          <div class="ps-visual" id="psv1">
+            <div class="vis-card" style="min-height:220px;">
+              <div id="p2-header"
+                style="font-size:10.5px;color:var(--ink3);font-family:var(--mono);margin-bottom:10px;">// Reading
+                Q3_Invoice.pdf</div>
+              <div
+                style="position:relative;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;overflow:hidden;height:90px;">
+                <div id="p2-scanline"
+                  style="position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);top:0;opacity:0;">
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <div class="embed-doc-line" style="width:92%;"></div>
+                  <div class="embed-doc-line" style="width:78%;"></div>
+                  <div class="embed-doc-line" style="width:85%;"></div>
+                  <div class="embed-doc-line" style="width:60%;"></div>
+                </div>
+              </div>
+              <div
+                style="margin-top:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:var(--mono);font-size:10.5px;color:var(--ink2);line-height:1.7;min-height:56px;overflow:hidden;">
+                <span style="color:var(--accent);">extracted = </span><span style="color:var(--green);">"</span><span
+                  id="p2-out"></span><span id="p2-cur"
+                  style="display:inline-block;width:1.5px;height:11px;background:var(--accent);vertical-align:middle;animation:cb 0.9s ease-in-out infinite;"></span><span
+                  style="color:var(--green);">"</span>
+              </div>
+              <div
+                style="margin-top:8px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink3);font-family:var(--mono);">
+                <div id="p2-spin"
+                  style="width:10px;height:10px;border:1.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:sp 0.65s linear infinite;">
+                </div>
+                <span id="p2-status">Reading page 1 of 3…</span>
+              </div>
+            </div>
+          </div>
+          <div class="ps-connector">
+            <div class="pc-line"></div>
+            <div class="pc-dot"></div>
+            <div class="pc-line"></div>
+          </div>
+          <div class="ps-text" id="pst1">
+            <div class="ps-num">STEP 02</div>
+            <div class="ps-title">Text is extracted</div>
+            <div class="ps-desc">The extractor reads every page of the PDF and returns one clean string of all content —
+              ready to be embedded.</div>
+            <div class="ps-detail">up to 10,000 chars per doc</div>
+          </div>
+        </div>
+
+        <!-- STEP 3 — EMBED -->
+        <div class="pipe-step">
+          <div class="ps-text" id="pst2">
+            <div class="ps-num">STEP 03</div>
+            <div class="ps-title">AI converts it to a vector</div>
+            <div class="ps-desc">The text is fed into <code
+                style="font-family:var(--mono);font-size:12px;background:var(--bg2);padding:1px 5px;border-radius:4px;color:var(--ink);">all-mpnet-base-v2</code>.
+              The gold-standard 420MB model outputs 768 numbers encoding the document's deep semantic meaning with far
+              greater accuracy than smaller models.</div>
+            <div class="ps-detail">768-dimensional embedding</div>
+          </div>
+          <div class="ps-connector">
+            <div class="pc-line"></div>
+            <div class="pc-dot"></div>
+            <div class="pc-line"></div>
+          </div>
+          <div class="ps-visual" id="psv2">
+            <div class="vis-card" style="min-height:220px;">
+              <div
+                style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;font-size:11.5px;margin-bottom:12px;">
+                <div
+                  style="width:22px;height:22px;border-radius:5px;background:var(--red-light);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:8px;font-family:var(--mono);font-weight:700;flex-shrink:0;">
+                  PDF</div>
+                <span style="color:var(--ink);flex:1;">Q3_Invoice.pdf</span>
+                <div id="p3-spin"
+                  style="width:11px;height:11px;border:1.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:sp 0.65s linear infinite;">
+                </div>
+              </div>
+              <div
+                style="text-align:center;font-size:10px;color:var(--accent);font-family:var(--mono);margin-bottom:8px;"
+                id="p3-label">Encoding meaning…</div>
+              <div
+                style="background:var(--accent-light);border:1px solid rgba(167,139,250,0.2);border-radius:8px;padding:12px;">
+                <div
+                  style="font-size:10px;color:var(--accent);font-family:var(--mono);margin-bottom:8px;display:flex;justify-content:space-between;">
+                  <span>vector[768]</span><span id="p3-dim">0 / 768</span>
+                </div>
+                <div id="p3-bars" style="display:flex;gap:1.5px;align-items:flex-end;height:48px;"></div>
+              </div>
+              <div style="margin-top:8px;font-family:var(--mono);font-size:10px;color:var(--ink3);line-height:1.6;"
+                id="p3-nums">[…]</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 — CHROMADB -->
+        <div class="pipe-step">
+          <div class="ps-visual" id="psv3">
+            <div class="vis-card" style="min-height:220px;padding:16px;">
+              <div
+                style="font-size:10.5px;color:var(--ink3);font-family:var(--mono);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+                <span>// chroma_data / documents</span>
+                <span id="p4-count" style="color:var(--accent);">0 vectors</span>
+              </div>
+              <canvas id="p4-canvas" width="280" height="150"
+                style="width:100%;height:150px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);display:block;"></canvas>
+              <div id="p4-badge"
+                style="margin-top:8px;display:inline-flex;align-items:center;gap:5px;background:var(--accent-light);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:10.5px;font-family:var(--mono);font-weight:500;opacity:0;transition:opacity 0.4s;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+                Saved to ChromaDB ✓
+              </div>
+            </div>
+          </div>
+          <div class="ps-connector">
+            <div class="pc-line"></div>
+            <div class="pc-dot"></div>
+            <div class="pc-line"></div>
+          </div>
+          <div class="ps-text" id="pst3">
+            <div class="ps-num">STEP 04</div>
+            <div class="ps-title">Stored in ChromaDB</div>
+            <div class="ps-desc">The vector is saved in ChromaDB — a local embedded database. No server needed. Every
+              dot on the map is one of your documents, placed by meaning.</div>
+            <div class="ps-detail">persists in /chroma_data on disk</div>
+          </div>
+        </div>
+
+        <!-- STEP 5 — SEARCH -->
+        <div class="pipe-step">
+          <div class="ps-text" id="pst4">
+            <div class="ps-num">STEP 05</div>
+            <div class="ps-title">Your query finds the match</div>
+            <div class="ps-desc">Your query is embedded the same way. ChromaDB finds the nearest vectors by cosine
+              similarity and returns ranked results in under 100ms.</div>
+            <div class="ps-detail">cosine similarity · &lt;100ms</div>
+          </div>
+          <div class="ps-connector">
+            <div class="pc-line"></div>
+            <div class="pc-dot"></div>
+            <div class="pc-line"></div>
+          </div>
+          <div class="ps-visual" id="psv4">
+            <div class="vis-card" style="min-height:220px;">
+              <div
+                style="display:flex;align-items:center;gap:7px;padding:9px 12px;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;margin-bottom:10px;transition:border-color 0.3s;"
+                id="p5-search">
+                <svg
+                  style="width:12px;height:12px;stroke:var(--ink3);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;"
+                  viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <span
+                  style="font-size:12px;color:var(--ink2);flex:1;font-family:var(--mono);white-space:nowrap;overflow:hidden;"
+                  id="p5-qtext"><span class="dcur"></span></span>
+              </div>
+              <div id="p5-searching"
+                style="display:none;align-items:center;gap:7px;font-size:11.5px;color:var(--ink3);padding:4px 0 8px;">
+                <div
+                  style="width:11px;height:11px;border:1.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:sp 0.65s linear infinite;flex-shrink:0;">
+                </div>
+                <span id="p5-stext">Embedding query…</span>
+              </div>
+              <div id="p5-results" style="display:flex;flex-direction:column;gap:7px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!--  NEW STEPS: System-Level Integrations          -->
+        <!-- ══════════════════════════════════════════════ -->
+
+        <!-- STEP 6 — GOLDEN CONTEXT HIGHLIGHTING -->
+        <div class="pipe-step">
+          <div class="ps-visual" id="psv5">
+            <div class="vis-card" style="min-height:240px;padding:16px;">
+              <div style="font-size:10.5px;color:var(--ink3);font-family:var(--mono);margin-bottom:10px;">// Opening
+                matched document…</div>
+              <!-- Simulated doc viewer -->
+              <div
+                style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:11px;color:var(--ink2);line-height:1.8;position:relative;overflow:hidden;">
+                <div style="display:flex;flex-direction:column;gap:5px;">
+                  <div class="embed-doc-line" style="width:88%;"></div>
+                  <div class="embed-doc-line" style="width:72%;"></div>
+                  <div style="height:6px;width:95%;border-radius:2px;position:relative;overflow:hidden;">
+                    <div style="height:100%;background:var(--bg);border-radius:2px;"></div>
+                  </div>
+                  <!-- highlighted paragraph -->
+                  <div id="p6-para"
+                    style="padding:6px 8px;border-radius:5px;font-family:var(--mono);font-size:10px;color:var(--ink2);background:transparent;border:1px solid transparent;transition:all 0.5s ease;line-height:1.7;">
+                    Total amount due: <span id="p6-kw1"
+                      style="padding:1px 4px;border-radius:3px;transition:all 0.5s ease;">£4,820.00</span> · Payment
+                    terms: <span id="p6-kw2" style="padding:1px 4px;border-radius:3px;transition:all 0.5s ease;">Net
+                      30</span> days
+                  </div>
+                  <div class="embed-doc-line" style="width:60%;"></div>
+                  <div class="embed-doc-line" style="width:80%;"></div>
+                </div>
+                <!-- scroll indicator -->
+                <div
+                  style="position:absolute;right:4px;top:0;bottom:0;width:3px;background:var(--border);border-radius:2px;">
+                  <div id="p6-scrollbar"
+                    style="width:100%;height:30%;background:var(--accent);border-radius:2px;transition:top 0.8s ease;position:relative;top:0%;opacity:0.5;">
+                  </div>
+                </div>
+              </div>
+              <div id="p6-badge"
+                style="margin-top:8px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gold);opacity:0;transition:opacity 0.4s;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span style="font-family:var(--mono);font-size:10.5px;">Jumped to matched paragraph · keywords
+                  highlighted</span>
+              </div>
+            </div>
+          </div>
+          <div class="ps-connector">
+            <div class="pc-line"></div>
+            <div class="pc-dot gold"></div>
+            <div class="pc-line"></div>
+          </div>
+          <div class="ps-text" id="pst5">
+            <div class="ps-num gold">STEP 06</div>
+            <div class="ps-title">Golden highlight &amp; auto-scroll</div>
+            <div class="ps-desc">When you click a result, the original file opens instantly. The app scrolls straight to
+              the matched paragraph and applies a pulsing golden glow to the exact keywords — no hunting required.</div>
+            <div class="ps-detail gold">all-mpnet-base-v2 · paragraph chunks</div>
+          </div>
+        </div>
+
+        <!-- STEP 7 — ZERO-CLICK AUTO-INDEXING -->
+        <div class="pipe-step">
+          <div class="ps-text" id="pst6">
+            <div class="ps-num orange">STEP 07</div>
+            <div class="ps-title">Zero-click auto-indexing</div>
+            <div class="ps-desc">A background thread watches your dedicated folder at <code
+                style="font-family:var(--mono);font-size:11px;background:var(--bg2);padding:1px 5px;border-radius:4px;color:var(--ink);">Documents\Ai&nbsp;Assistant&nbsp;Input</code>.
+              The moment you drop a file in — even from another app — CtrlSense wakes up, extracts text, and injects
+              it into the vector brain. No button clicks needed.</div>
+            <div class="ps-detail orange">watchdog · background thread</div>
+          </div>
+          <div class="ps-connector">
+            <div class="pc-line"></div>
+            <div class="pc-dot orange"></div>
+            <div class="pc-line"></div>
+          </div>
+          <div class="ps-visual" id="psv6">
+            <div class="vis-card" style="min-height:240px;padding:16px;">
+              <div
+                style="font-size:10.5px;color:var(--ink3);font-family:var(--mono);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+                <div id="p7-watch-dot"
+                  style="width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 3px rgba(251,146,60,0.2);flex-shrink:0;">
+                </div>
+                <span>Watching Documents\Ai Assistant Input</span>
+              </div>
+              <!-- Folder listing -->
+              <div
+                style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px;font-family:var(--mono);font-size:11px;min-height:120px;">
+                <div id="p7-files" style="display:flex;flex-direction:column;gap:5px;"></div>
+              </div>
+              <div id="p7-toast"
+                style="margin-top:8px;padding:7px 10px;background:var(--orange-light);border:1px solid rgba(251,146,60,0.25);border-radius:7px;font-size:11px;color:var(--orange);font-family:var(--mono);opacity:0;transition:opacity 0.4s;display:flex;align-items:center;gap:6px;">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;"></div>
+                <span id="p7-toast-text">new_contract.pdf detected → indexing…</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 8 — GLOBAL SPOTLIGHT HOTKEY -->
+        <div class="pipe-step">
+          <div class="ps-visual" id="psv7">
+            <div class="vis-card"
+              style="min-height:240px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;">
+              <!-- Keyboard shortcut display -->
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div id="p8-ctrl"
+                  style="padding:6px 12px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink2);transition:all 0.2s;box-shadow:0 3px 0 rgba(0,0,0,0.4);">
+                  Ctrl</div>
+                <span style="color:var(--ink3);font-size:14px;font-weight:300;">+</span>
+                <div id="p8-shift"
+                  style="padding:6px 12px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink2);transition:all 0.2s;box-shadow:0 3px 0 rgba(0,0,0,0.4);">
+                  Shift</div>
+                <span style="color:var(--ink3);font-size:14px;font-weight:300;">+</span>
+                <div id="p8-d"
+                  style="padding:6px 16px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:7px;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink2);transition:all 0.2s;box-shadow:0 3px 0 rgba(0,0,0,0.4);">
+                  D</div>
+              </div>
+              <!-- Overlay popup mockup -->
+              <div id="p8-overlay"
+                style="width:100%;max-width:260px;background:var(--surface);border:1.5px solid var(--border2);border-radius:12px;overflow:hidden;opacity:0;transform:scale(0.88) translateY(8px);transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 20px 50px rgba(0,0,0,0.6);">
+                <div
+                  style="padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+                  <svg
+                    style="width:12px;height:12px;stroke:var(--ink3);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;"
+                    viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <span style="font-size:12px;color:var(--ink2);font-family:var(--mono);" id="p8-qtext"><span
+                      class="dcur"></span></span>
+                </div>
+                <div style="padding:8px 10px;font-size:10.5px;color:var(--ink3);font-family:var(--mono);">CtrlSense
+                  Spotlight · always ready</div>
+              </div>
+              <div id="p8-label"
+                style="font-size:11px;color:var(--ink3);text-align:center;opacity:0;transition:opacity 0.4s;">Works from
+                any app — Chrome, Word, games</div>
+            </div>
+          </div>
+          <div class="ps-connector">
+            <div class="pc-line"></div>
+            <div class="pc-dot blue"></div>
+            <div class="pc-line"></div>
+          </div>
+          <div class="ps-text" id="pst7">
+            <div class="ps-num blue">STEP 08</div>
+            <div class="ps-title">Global Spotlight hotkey</div>
+            <div class="ps-desc">Press <kbd
+                style="font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;padding:1px 6px;">Ctrl</kbd>
+              + <kbd
+                style="font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;padding:1px 6px;">Shift</kbd>
+              + <kbd
+                style="font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;padding:1px 6px;">D</kbd>
+              from anywhere on your computer — mid-game, mid-browser, mid-document — and the CtrlSense overlay
+              instantly snaps to the front, ready for a semantic query. No minimizing windows needed.</div>
+            <div class="ps-detail blue">keyboard · pygetwindow · system overlay</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testi-section">
+    <div class="testi-inner reveal">
+      <div class="section-eyebrow" style="text-align:center;">Built for professionals</div>
+      <h2 class="section-h" style="text-align:center;">Goodbye Ctrl+F</h2>
+
+      <div class="testi-track-wrap" id="twrap">
+        <div class="testi-track" id="ttrack">
+          <div class="testi-card">
+            <div class="testi-quote">I used to spend 20 minutes hunting for specific indemnity clauses across 50-page
+              vendor contracts. Now I just type 'what happens if they get sued' and it drops me on the exact paragraph.
+              Incredible time saver.</div>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:var(--blue-light);color:var(--blue);">SJ</div>
+              <div>
+                <div class="testi-name">Sarah Jenkins</div>
+                <div class="testi-role">Legal Counsel</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">The background folder watching is genius. I drop invoices from my email straight
+              into the folder. By the time I switch to CtrlSense, they are already indexed and searchable. Zero friction
+              workflow.</div>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:var(--green-light);color:var(--green);">MR</div>
+              <div>
+                <div class="testi-name">Marcus Reed</div>
+                <div class="testi-role">Operations Manager</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">Finally, an AI tool that actually respects privacy. As an accountant, I can't
+              upload client financials to web APIs. Having an accurate semantic search run entirely offline on my local
+              machine is a game changer.</div>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:var(--amber-light);color:var(--amber);">EL</div>
+              <div>
+                <div class="testi-name">Elena Lin</div>
+                <div class="testi-role">Senior CPA</div>
+              </div>
+            </div>
+          </div>
+          <!-- Duplicates for infinite loop -->
+          <div class="testi-card">
+            <div class="testi-quote">I used to spend 20 minutes hunting for specific indemnity clauses across 50-page
+              vendor contracts. Now I just type 'what happens if they get sued' and it drops me on the exact paragraph.
+              Incredible time saver.</div>
+            <div class="testi-author">
+              <div class="testi-avatar" style="background:var(--blue-light);color:var(--blue);">SJ</div>
+              <div>
+                <div class="testi-name">Sarah Jenkins</div>
+                <div class="testi-role">Legal Counsel</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-dots">
+        <div class="testi-dot on" onclick="gt(0)"></div>
+        <div class="testi-dot" onclick="gt(1)"></div>
+        <div class="testi-dot" onclick="gt(2)"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="comp-section">
+    <div class="comp-inner reveal">
+      <div class="section-eyebrow" style="text-align:center;">The CtrlSense Difference</div>
+      <h2 class="section-h" style="text-align:center;">Why semantic search wins</h2>
+
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th class="comp-col-head">Standard Ctrl+F</th>
+            <th class="comp-col-head">Basic Search App</th>
+            <th class="comp-col-head hl comp-col-hl" style="border-radius:12px 12px 0 0;">CtrlSense</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Understands meaning?</td>
+            <td class="comp-no">✕</td>
+            <td class="comp-no">✕</td>
+            <td class="comp-col-hl comp-yes">✓</td>
+          </tr>
+          <tr>
+            <td>Finds synonyms automatically?</td>
+            <td class="comp-no">✕</td>
+            <td class="comp-no">✕</td>
+            <td class="comp-col-hl comp-yes">✓</td>
+          </tr>
+          <tr>
+            <td>Works offline? (Zero cloud)</td>
+            <td class="comp-yes">✓</td>
+            <td class="comp-yes">✓</td>
+            <td class="comp-col-hl comp-yes">✓</td>
+          </tr>
+          <tr>
+            <td>Auto-indexes background folders?</td>
+            <td class="comp-no">✕</td>
+            <td class="comp-no">✕</td>
+            <td class="comp-col-hl comp-yes">✓</td>
+          </tr>
+          <tr>
+            <td>Global hotkey (Ctrl+Shift+D)?</td>
+            <td class="comp-no">✕</td>
+            <td class="comp-no">✕</td>
+            <td class="comp-col-hl comp-yes">✓</td>
+          </tr>
+          <tr>
+            <td style="border-bottom:none;">Highlights exact match in doc?</td>
+            <td style="border-bottom:none;" class="comp-yes">✓</td>
+            <td style="border-bottom:none;" class="comp-no">✕</td>
+            <td style="border-bottom:none;border-radius:0 0 12px 12px;" class="comp-col-hl comp-yes">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PRICING TIERS -->
+  <section class="pricing-section" id="pricing" style="padding: 80px 24px; background: rgba(0,0,0,0.2);">
+    <div class="pricing-inner reveal" style="max-width: 900px; margin: 0 auto;">
+      <div style="text-align:center; margin-bottom: 48px;">
+        <div class="section-eyebrow">Pricing Plans</div>
+        <h2 class="section-h">Simple, Transparent Pricing</h2>
+        <p class="section-p" style="margin-top:8px;">Choose the tier that fits your knowledge base needs.</p>
+      </div>
+
+      <div class="pricing-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;">
+        <!-- FREE TIER -->
+        <div class="pricing-card"
+          style="position: relative; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 40px 32px; display: flex; flex-direction: column; transition: all 0.3s; overflow: hidden;">
+          <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 8px;">Free Plan</h3>
+            <p style="font-size: 14px; color: var(--ink2);">Standard offline local desktop search for individuals.</p>
+          </div>
+          <div style="font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 24px;">
+            $0 <span style="font-size: 14px; color: var(--ink2); font-weight: 400;">/ forever</span>
+          </div>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; flex: 1;">
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink);"><span
+                style="color: var(--green);">✓</span> 25 Documents Packets</li>
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink);"><span
+                style="color: var(--green);">✓</span> Local Semantic AI Search</li>
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink);"><span
+                style="color: var(--green);">✓</span> 100% Private Offline Processing</li>
+            <li
+              style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink3); text-decoration: line-through;">
+              <span>✕</span> Desktop Trigger Shortcut
+            </li>
+            <li
+              style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink3); text-decoration: line-through;">
+              <span>✕</span> Custom backgroundWatch Folder
+            </li>
+          </ul>
+          <a href="#" onclick="gateDownload(event)"
+            style="display: block; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; transition: 0.15s;">Get
+            Started</a>
+        </div>
+
+        <!-- PRO TIER -->
+        <div class="pricing-card"
+          style="position: relative; background: rgba(167, 139, 250, 0.03); border: 1px solid rgba(167, 139, 250, 0.2); border-radius: 16px; padding: 40px 32px; display: flex; flex-direction: column; transition: all 0.3s; overflow: hidden; box-shadow: 0 0 40px rgba(167, 139, 250, 0.05);">
+          <div
+            style="position: absolute; top: 16px; right: 16px; background: var(--accent); color: var(--bg); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px;">
+            RECOMMENDED</div>
+          <div style="margin-bottom: 24px;">
+            <h3 style="font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 8px;">Pro Plan</h3>
+            <p style="font-size: 14px; color: var(--ink2);">The ultimate power solution for advanced power users.</p>
+          </div>
+          <div style="font-size: 36px; font-weight: 700; color: #fff; margin-bottom: 24px;">
+            $5 <span style="font-size: 14px; color: var(--ink2); font-weight: 400;">/ one-time</span>
+          </div>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; flex: 1;">
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fff;"><span
+                style="color: var(--accent);">✦</span> Unlimited Documents</li>
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fff;"><span
+                style="color: var(--accent);">✦</span> Local Semantic AI Search</li>
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fff;"><span
+                style="color: var(--accent);">✦</span> 100% Private Offline Processing</li>
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fff;"><span
+                style="color: var(--accent);">✦</span> Desktop Trigger Shortcut</li>
+            <li style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fff;"><span
+                style="color: var(--accent);">✦</span> Custom Background Watch Folder</li>
+          </ul>
+          <a id="pro-upgrade-link"
+            href="https://checkout.dodopayments.com/buy/pdt_0NbF8f1AtT3DrHiC323n5?session=sess_km8wvgtr2o" target="_blank"
+            style="display: block; text-align: center; background: var(--accent); color: var(--bg); padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none; transition: 0.15s; box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);">Upgrade
+            to Pro</a>
+          <script>
+            setTimeout(() => {
+              const upgradeBtn = document.getElementById('pro-upgrade-link');
+              let baseUrl = window.location.href.split('?')[0].split('#')[0];
+              if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
+              if (baseUrl.endsWith('index.html')) baseUrl = baseUrl.replace('/index.html', '');
+
+              const redirectUrl = baseUrl + '/purchases.html';
+              // Add both redirect_url and return_url for maximum compatibility with Dodo
+              upgradeBtn.href += "&redirect_url=" + encodeURIComponent(redirectUrl) + "&return_url=" + encodeURIComponent(redirectUrl);
+            }, 500);
+          </script>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="feat-strip" id="features">
+    <div class="feat-strip-inner reveal">
+      <div class="feat-strip-grid">
+        <div class="fs-card">
+          <div class="fs-icon purple"><svg viewBox="0 0 24 24">
+              <polygon points="12 2 2 7 12 12 22 7 12 2" />
+              <polyline points="2 17 12 22 22 17" />
+              <polyline points="2 12 12 17 22 12" />
+            </svg></div>
+          <h3 class="fs-title">Advanced Semantic AI</h3>
+          <p class="fs-text">Search documents by what they mean, not just keywords. Smart local vector parsing
+            understands synonyms automatically.</p>
+        </div>
+        <div class="fs-card">
+          <div class="fs-icon blue"><svg viewBox="0 0 24 24">
+              <path
+                d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+            </svg></div>
+          <h3 class="fs-title">Total Privacy</h3>
+          <p class="fs-text">Your files never leave your machine. The AI model runs entirely on your local CPU. Zero
+            cloud API calls.</p>
+        </div>
+        <div class="fs-card">
+          <div class="fs-icon green"><svg viewBox="0 0 24 24">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg></div>
+          <h3 class="fs-title">Instant Hotkey</h3>
+          <p class="fs-text">Hit Ctrl+Shift+D from anywhere to bring up the search overlay instantly. Built for power
+            users.</p>
+        </div>
+        <div class="fs-card">
+          <div class="fs-icon amber"><svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg></div>
+          <h3 class="fs-title">Auto Watch Folder</h3>
+          <p class="fs-text">Save files to the dedicated input folder and background threads process it automatically
+            within seconds.</p>
+        </div>
+        <div class="fs-card">
+          <div class="fs-icon red"><svg viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg></div>
+          <h3 class="fs-title">Golden Highlighting</h3>
+          <p class="fs-text">Click a result and instantly open the document, scrolled exactly to the matched text with a
+            golden glow.</p>
+        </div>
+        <div class="fs-card">
+          <div class="fs-icon gray"><svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <line x1="3" y1="9" x2="21" y2="9" />
+              <line x1="9" y1="21" x2="9" y2="9" />
+            </svg></div>
+          <h3 class="fs-title">Beautiful UI</h3>
+          <p class="fs-text">A modern, clean interface built with dark mode in mind. Fast, responsive, and a joy to use
+            daily.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section class="dl-section" id="download">
+    <div class="dl-inner reveal">
+      <div
+        style="width:64px;height:64px;border-radius:16px;background:var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+        <svg style="width:32px;height:32px;fill:white;" viewBox="0 0 24 24">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        </svg>
+      </div>
+      <h2 class="dl-title">Ready to find what you mean?</h2>
+      <p class="dl-sub">Download the standalone Windows executable. It comes bundled with the local AI model, so
+        everything works out of the box.</p>
+
+      <div class="dl-btns">
+        <a href="#" onclick="gateDownload(event)" class="dl-btn dl-btn-main">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download for Windows
+        </a>
+        <!-- GitHub button removed -->
+      </div>
+
+      <div class="dl-chips">
+        <span class="dl-chip">v1.2.0</span>
+        <span class="dl-chip">420MB model included</span>
+        <span class="dl-chip">Requires Windows 10/11</span>
+      </div>
+
+      <p class="dl-note">By downloading, you agree to run awesome local AI.<br /><a href="#">Read the documentation</a>
+        for advanced setup details.</p>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  <section class="faq-section" id="faq" style="padding: 80px 24px; background: var(--bg);">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <div style="text-align:center; margin-bottom: 48px;">
+        <div class="section-eyebrow">Questions?</div>
+        <h2 class="section-h">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq-list" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="faq-item"
+          style="background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; cursor: pointer;">
+          <h4 style="font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 8px;">Does CtrlSense send my
+            documents to the cloud?</h4>
+          <p style="font-size: 14px; color: var(--ink2);">No. 100% of the extraction and AI vector indexing happens
+            locally on your desktop node CPU. It works completely without an internet connection.</p>
+        </div>
+        <div class="faq-item"
+          style="background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; cursor: pointer;">
+          <h4 style="font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 8px;">What file types are supported?
+          </h4>
+          <p style="font-size: 14px; color: var(--ink2);">The current version fully supports PDFs and Text
+            (.txt) documents. Support for more document nodes is coming in future cycles.</p>
+        </div>
+        <div class="faq-item"
+          style="background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; cursor: pointer;">
+          <h4 style="font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 8px;">How does the $5 Pro model
+            activation work?</h4>
+          <p style="font-size: 14px; color: var(--ink2);">Once bought, you receive an activation string. You paste it
+            right inside the desktop Settings dashboard and it permanently unlocks unlimited indexed files for that
+            computer offline instantly.</p>
+        </div>
+        <div class="faq-item"
+          style="background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; cursor: pointer;">
+          <h4 style="font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 8px;">Will it slow down my computer
+            background?</h4>
+          <p style="font-size: 14px; color: var(--ink2);">No. It operates using highly memory-efficient background
+            thread monitors that sleep until they detect dropped nodes, avoiding high CPU drain loads.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <footer style="padding: 60px 24px; border-top: 1px solid var(--border); background: #0f0f15;">
+    <div class="footer-grid"
+      style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; text-align: left;">
+      <!-- Product / Logo Column -->
+      <div class="footer-col">
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: #fff; margin-bottom: 16px;">
+          <div
+            style="width: 32px; height: 32px; border-radius: 8px; background: transparent; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <img src="ctrlsense_logo.png"
+              style="width: 100%; height: 100%; border-radius: inherit; object-fit: cover; transform: scale(1.8);"
+              alt="CtrlSense Logo">
+          </div>
+          CtrlSense
+        </div>
+        <p style="font-size: 13px; color: var(--ink2); line-height: 1.6; max-width: 240px;">Local-first AI document
+          search. 100% private, 100% offline indexing nodes.</p>
+      </div>
+
+      <!-- Social Column -->
+      <div class="footer-col">
+        <h4 style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 16px; letter-spacing: 0.5px;">CONNECT
+        </h4>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <a href="https://entrextlabs.substack.com/subscribe" target="_blank"
+            style="font-size: 13px; color: var(--ink2); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.15s; cursor: pointer;"
+            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--ink2)'">Substack</a>
+          <a href="https://discord.com/invite/ZZx3cBrx2" target="_blank"
+            style="font-size: 13px; color: var(--ink2); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.15s; cursor: pointer;"
+            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--ink2)'">Discord</a>
+          <a href="http://linkedin.com/company/entrext/" target="_blank"
+            style="font-size: 13px; color: var(--ink2); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.15s; cursor: pointer;"
+            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--ink2)'">LinkedIn</a>
+          <a href="https://www.instagram.com/entrext.labs/" target="_blank"
+            style="font-size: 13px; color: var(--ink2); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.15s; cursor: pointer;"
+            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--ink2)'">Instagram</a>
+        </div>
+      </div>
+
+      <!-- Legal Column -->
+      <div class="footer-col">
+        <h4 style="font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 16px; letter-spacing: 0.5px;">LEGAL
+        </h4>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <a href="docs.html" style="font-size: 13px; color: var(--ink2); text-decoration: none; transition: 0.15s;"
+            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--ink2)'">Documentation</a>
+          <a href="privacy.html" style="font-size: 13px; color: var(--ink2); text-decoration: none; transition: 0.15s;"
+            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--ink2)'">Privacy Policy</a>
+          <a href="terms.html" style="font-size: 13px; color: var(--ink2); text-decoration: none; transition: 0.15s;"
+            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--ink2)'">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div
+      style="margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 24px; text-align: center; font-size: 12px; color: var(--ink3);">
+      &copy; 2026 CtrlSense. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- MAIN SCRIPT (Animations, Scroll, Logic) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const nav = document.getElementById("nav");
+      const scta = document.getElementById("sticky-cta");
+      const sbar = document.getElementById("scroll-bar");
+
+      window.addEventListener("scroll", () => {
+        let y = window.scrollY;
+        let max = document.documentElement.scrollHeight - window.innerHeight;
+        let pct = (y / max) * 100;
+        sbar.style.width = pct + "%";
+
+        if (y > 40) {
+          nav.classList.add("scrolled");
+        } else {
+          nav.classList.remove("scrolled");
+        }
+
+        // show sticky cta past hero
+        if (y > 600) {
+          if (!scta.hasAttribute('data-hidden')) scta.classList.add("show");
+        } else {
+          scta.classList.remove("show");
+        }
+      });
+
+      document.getElementById('sticky-close').addEventListener('click', function (e) {
+        e.preventDefault();
+        scta.classList.remove("show");
+        scta.setAttribute('data-hidden', 'true');
+      });
+
+      // Reveal on scroll
+      const reveals = document.querySelectorAll('.reveal');
+      const obs = new IntersectionObserver((ents) => {
+        ents.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('vis');
+            // trigger stats counter if it is the stat strip reveal
+            if (e.target.id === 'sc-trigger-row') { }
+          }
+        });
+      }, { threshold: 0.15 });
+      reveals.forEach(r => obs.observe(r));
+
+
+
+
+      // Theme Toggle
+      const tbtn = document.getElementById("theme-btn");
+      tbtn.addEventListener("click", () => {
+        document.body.classList.toggle("light");
+        drawAurora(); // redraw
+      });
+
+      // Pipe Sequences
+      const pObs = new IntersectionObserver((ents) => {
+        ents.forEach(e => {
+          if (e.isIntersecting) {
+            let id = e.target.id;
+            if (id === 'pst0') runUploadSim();
+            if (id === 'pst1') runExtractSim();
+            if (id === 'pst2') runEmbedSim();
+            if (id === 'pst3') runChromaSim();
+            if (id === 'pst4') runSearchSim();
+            if (id === 'pst5') runHighlightSim();
+            if (id === 'pst6') runWatchSim();
+            if (id === 'pst7') runHotkeySim();
+            e.target.classList.add('vis');
+            let vsId = 'psv' + id.replace('pst', '');
+            let v = document.getElementById(vsId);
+            if (v) v.classList.add('vis');
+          }
+        });
+      }, { threshold: 0.5 });
+
+      for (let i = 0; i < 8; i++) {
+        let st = document.getElementById('pst' + i);
+        if (st) pObs.observe(st);
+      }
+
+      // --- Pipeline Sims (Triggered once on scroll) ---
+
+      // STEP 0 - Upload
+      let s0done = false;
+      function runUploadSim() {
+        if (s0done) return; s0done = true;
+        setTimeout(() => {
+          document.getElementById('p1-file').style.top = '50px';
+          document.getElementById('p1-file').style.opacity = '1';
+          document.getElementById('p1-zone').style.borderColor = 'var(--accent)';
+          document.getElementById('p1-zone').style.background = 'var(--accent-light)';
+          setTimeout(() => {
+            document.getElementById('p1-file').style.top = '110px';
+            setTimeout(() => {
+              document.getElementById('p1-file').style.opacity = '0';
+              document.getElementById('p1-label').innerText = 'Q3_Invoice.pdf added';
+              document.getElementById('p1-progress').style.opacity = '1';
+              let w = 0;
+              let pt = setInterval(() => {
+                w += 4;
+                document.getElementById('p1-pbar').style.width = w + '%';
+                document.getElementById('p1-ppct').innerText = w + '%';
+                if (w >= 100) {
+                  clearInterval(pt);
+                  document.getElementById('p1-ptext').innerText = 'Done.';
+                  setTimeout(() => {
+                    document.getElementById('p1-done').style.opacity = '1';
+                  }, 300);
+                }
+              }, 40);
+            }, 400);
+          }, 300);
+        }, 500);
+      }
+
+      // STEP 1 - Extract
+      let s1done = false;
+      function runExtractSim() {
+        if (s1done) return; s1done = true;
+        setTimeout(() => {
+          let sl = document.getElementById('p2-scanline');
+          sl.style.opacity = '1';
+          let ty = 0;
+          let dir = 1;
+          setInterval(() => {
+            ty += dir * 2;
+            if (ty > 88) { dir = -1; }
+            if (ty < 0) { dir = 1; }
+            sl.style.transform = `translateY(${ty}px)`;
+          }, 20);
+
+          const str = "INVOICE #9092\nAmount: £4820\nTerms: Net 30...";
+          const out = document.getElementById('p2-out');
+          let i = 0;
+          let type = setInterval(() => {
+            out.innerText += str[i];
+            i++;
+            if (i >= str.length) {
+              clearInterval(type);
+              document.getElementById('p2-status').innerText = "Extraction complete.";
+              document.getElementById('p2-status').style.color = "var(--green)";
+              document.getElementById('p2-spin').style.display = "none";
+            }
+          }, 60);
+        }, 600);
+      }
+
+      // STEP 2 - Embed
+      let s2done = false;
+      function runEmbedSim() {
+        if (s2done) return; s2done = true;
+        setTimeout(() => {
+          const bars = document.getElementById('p3-bars');
+          for (let i = 0; i < 64; i++) {
+            let d = document.createElement('div');
+            d.style.flex = '1';
+            d.style.height = '0%';
+            d.style.background = 'var(--accent)';
+            d.style.opacity = '0.5';
+            d.style.transition = 'height 0.2s ease, opacity 0.2s ease';
+            bars.appendChild(d);
+          }
+
+          let dim = document.getElementById('p3-dim');
+          let nd = document.getElementById('p3-nums');
+          let cw = 0;
+          let tt = setInterval(() => {
+            cw += 24;
+            if (cw > 768) cw = 768;
+            dim.innerText = cw + " / 768";
+
+            let arr = Array.from(bars.children);
+            arr.forEach(a => {
+              if (Math.random() > 0.2) {
+                a.style.height = (10 + Math.random() * 90) + '%';
+                a.style.opacity = (0.4 + Math.random() * 0.6);
+              }
+            });
+
+            let nstr = "[";
+            for (let k = 0; k < 8; k++) {
+              nstr += (Math.random() * 2 - 1).toFixed(4) + ", ";
+            }
+            nd.innerText = nstr.slice(0, -2) + " ...]";
+
+            if (cw === 768) {
+              clearInterval(tt);
+              document.getElementById('p3-spin').style.display = 'none';
+              document.getElementById('p3-label').innerText = 'Vectorization complete ✓';
+              arr.forEach(a => { a.style.height = (30 + Math.random() * 40) + '%'; a.style.opacity = '0.8'; });
+            }
+          }, 40);
+        }, 500);
+      }
+
+      // STEP 3 - Chroma
+      let s3done = false;
+      function runChromaSim() {
+        if (s3done) return; s3done = true;
+        setTimeout(() => {
+          const canv = document.getElementById('p4-canvas');
+          const cx = canv.getContext('2d');
+          const w = canv.width, h = canv.height;
+          let dots = [];
+          // draw base dots
+          for (let i = 0; i < 40; i++) {
+            dots.push({ x: Math.random() * w, y: Math.random() * h, a: 0.1 + Math.random() * 0.3 });
+          }
+
+          let frame = 0;
+          let c = 0;
+          function loop() {
+            frame++;
+            cx.clearRect(0, 0, w, h);
+            dots.forEach(d => {
+              cx.beginPath();
+              cx.arc(d.x, d.y, 2.5, 0, Math.PI * 2);
+              cx.fillStyle = `rgba(145,145,168,${d.a})`;
+              cx.fill();
+            });
+
+            // Add new dot animated
+            if (frame > 20 && frame < 40) {
+              let scale = 1 + (40 - frame) * 0.2;
+              cx.beginPath();
+              cx.arc(w / 2 + 20, h / 2 - 10, 2.5 * scale, 0, Math.PI * 2);
+              cx.fillStyle = `rgba(167,139,250,1)`;
+              cx.fill();
+              cx.beginPath();
+              cx.arc(w / 2 + 20, h / 2 - 10, 6 * scale, 0, Math.PI * 2);
+              cx.strokeStyle = `rgba(167,139,250,0.5)`;
+              cx.stroke();
+            } else if (frame >= 40) {
+              cx.beginPath();
+              cx.arc(w / 2 + 20, h / 2 - 10, 2.5, 0, Math.PI * 2);
+              cx.fillStyle = `rgba(167,139,250,1)`;
+              cx.fill();
+            }
+
+            if (frame === 30) {
+              document.getElementById('p4-count').innerText = '41 vectors';
+              document.getElementById('p4-badge').style.opacity = '1';
+            }
+
+            if (frame < 100) requestAnimationFrame(loop);
+          }
+          loop();
+        }, 600);
+      }
+
+      // STEP 4 - Search
+      let s4done = false;
+      function runSearchSim() {
+        if (s4done) return; s4done = true;
+        setTimeout(() => {
+          const sq = document.getElementById('p5-qtext');
+          const txt = "find invoice 9092";
+          let i = 0;
+          sq.innerHTML = '<span class="dcur"></span>';
+          let st = setInterval(() => {
+            sq.innerHTML = txt.slice(0, i + 1) + '<span class="dcur"></span>';
+            i++;
+            if (i >= txt.length) {
+              clearInterval(st);
+              sq.innerHTML = txt;
+              document.getElementById('p5-search').style.borderColor = "var(--accent)";
+              document.getElementById('p5-searching').style.display = "flex";
+              setTimeout(() => {
+                document.getElementById('p5-searching').style.display = "none";
+                let res = document.getElementById('p5-results');
+                res.innerHTML = `
+              <div style="background:var(--bg2);border:1px solid var(--accent);border-radius:8px;padding:10px;display:flex;gap:10px;align-items:center;">
+                <div style="background:var(--red-light);color:var(--red);font-size:8px;font-family:var(--mono);font-weight:700;padding:5px;border-radius:4px;">PDF</div>
+                <div style="flex:1;">
+                  <div style="font-size:12px;color:var(--ink);font-weight:500;">Q3_Invoice.pdf</div>
+                  <div style="font-size:11px;color:var(--ink3);">...INVOICE #9092 Amount £4820...</div>
+                </div>
+                <div style="color:var(--accent);font-weight:600;font-size:12px;">72%</div>
+              </div>
+              <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;gap:10px;align-items:center;">
+                <div style="background:var(--green-light);color:var(--green);font-size:8px;font-family:var(--mono);font-weight:700;padding:5px;border-radius:4px;">TXT</div>
+                <div style="flex:1;">
+                  <div style="font-size:12px;color:var(--ink);font-weight:500;">finances_aug.txt</div>
+                  <div style="font-size:11px;color:var(--ink3);">...pending invoices for Q3...</div>
+                </div>
+                <div style="color:var(--ink3);font-weight:600;font-size:12px;">48%</div>
+              </div>
+            `;
+              }, 800);
+            }
+          }, 50);
+        }, 600);
+      }
+
+      // STEP 5 - Highlight
+      let s5done = false;
+      function runHighlightSim() {
+        if (s5done) return; s5done = true;
+        setTimeout(() => {
+          // Scroll down
+          document.getElementById('p6-scrollbar').style.top = '40%';
+          setTimeout(() => {
+            // Glow keywords
+            const p = document.getElementById('p6-para');
+            const k1 = document.getElementById('p6-kw1');
+            const k2 = document.getElementById('p6-kw2');
+            p.style.animation = 'glowPulse 2s ease infinite';
+            k1.style.animation = 'glowPulseText 2s ease infinite';
+            k2.style.animation = 'glowPulseText 2s ease infinite';
+            p.style.background = 'rgba(245,158,11,0.05)';
+            p.style.borderColor = 'rgba(245,158,11,0.2)';
+            document.getElementById('p6-badge').style.opacity = '1';
+          }, 800);
+        }, 600);
+      }
+
+      // STEP 6 - Watch Folder
+      let s6done = false;
+      function runWatchSim() {
+        if (s6done) return; s6done = true;
+        setTimeout(() => {
+          let dot = document.getElementById('p7-watch-dot');
+          let t = true;
+          setInterval(() => {
+            dot.style.opacity = t ? '0.3' : '1';
+            t = !t;
+          }, 500);
+
+          const list = document.getElementById('p7-files');
+          list.innerHTML = `
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> old_receipt.pdf</div>
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> notes.txt</div>
+      `;
+
+          setTimeout(() => {
+            list.insertAdjacentHTML('beforeend', `
+          <div style="display:flex;align-items:center;gap:6px;color:var(--orange);opacity:0;transition:opacity 0.4s;" id="p7-newf">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> new_contract.pdf
+          </div>
+        `);
+            setTimeout(() => document.getElementById('p7-newf').style.opacity = '1', 50);
+            setTimeout(() => {
+              document.getElementById('p7-toast').style.opacity = '1';
+              setTimeout(() => {
+                document.getElementById('p7-toast-text').innerText = 'new_contract.pdf indexed ✓';
+                setTimeout(() => document.getElementById('p7-toast').style.opacity = '0', 2000);
+              }, 1500);
+            }, 500);
+          }, 1000);
+        }, 600);
+      }
+
+      // STEP 7 - Hotkey
+      let s7done = false;
+      function runHotkeySim() {
+        if (s7done) return; s7done = true;
+        setTimeout(() => {
+          // Press keys
+          document.getElementById('p8-ctrl').style.transform = 'translateY(2px)';
+          document.getElementById('p8-ctrl').style.boxShadow = '0 1px 0 rgba(0,0,0,0.4)';
+          document.getElementById('p8-ctrl').style.background = 'var(--ink)';
+          document.getElementById('p8-ctrl').style.color = 'var(--bg)';
+
+          setTimeout(() => {
+            document.getElementById('p8-shift').style.transform = 'translateY(2px)';
+            document.getElementById('p8-shift').style.boxShadow = '0 1px 0 rgba(0,0,0,0.4)';
+            document.getElementById('p8-shift').style.background = 'var(--ink)';
+            document.getElementById('p8-shift').style.color = 'var(--bg)';
+
+            setTimeout(() => {
+              document.getElementById('p8-d').style.transform = 'translateY(2px)';
+              document.getElementById('p8-d').style.boxShadow = '0 1px 0 rgba(0,0,0,0.4)';
+              document.getElementById('p8-d').style.background = 'var(--ink)';
+              document.getElementById('p8-d').style.color = 'var(--bg)';
+
+              setTimeout(() => {
+                // Release keys
+                document.getElementById('p8-ctrl').style.transform = 'none';
+                document.getElementById('p8-ctrl').style.boxShadow = '0 3px 0 rgba(0,0,0,0.4)';
+                document.getElementById('p8-ctrl').style.background = 'var(--bg2)';
+                document.getElementById('p8-ctrl').style.color = 'var(--ink2)';
+
+                document.getElementById('p8-shift').style.transform = 'none';
+                document.getElementById('p8-shift').style.boxShadow = '0 3px 0 rgba(0,0,0,0.4)';
+                document.getElementById('p8-shift').style.background = 'var(--bg2)';
+                document.getElementById('p8-shift').style.color = 'var(--ink2)';
+
+                document.getElementById('p8-d').style.transform = 'none';
+                document.getElementById('p8-d').style.boxShadow = '0 3px 0 rgba(0,0,0,0.4)';
+                document.getElementById('p8-d').style.background = 'var(--bg2)';
+                document.getElementById('p8-d').style.color = 'var(--ink2)';
+
+                // Show overlay
+                const ov = document.getElementById('p8-overlay');
+                ov.style.opacity = '1';
+                ov.style.transform = 'scale(1) translateY(0)';
+                document.getElementById('p8-label').style.opacity = '1';
+
+                // Type
+                setTimeout(() => {
+                  const sq = document.getElementById('p8-qtext');
+                  const txt = "find tax doc";
+                  let i = 0;
+                  sq.innerHTML = '<span class="dcur"></span>';
+                  let st = setInterval(() => {
+                    sq.innerHTML = txt.slice(0, i + 1) + '<span class="dcur"></span>';
+                    i++;
+                    if (i >= txt.length) clearInterval(st);
+                  }, 60);
+                }, 600);
+              }, 150);
+            }, 100);
+          }, 100);
+        }, 800);
+      }
+
+      // --- Hero Interactive Demo ---
+      const heroH = ["find invoice for software", "marketing budget Q3", "what is the refund policy", "how to reset password"];
+      const search = document.getElementById("dsearch");
+      const ddemo = document.getElementById("ddemo");
+      const spin = document.getElementById("dspin");
+      const reswrap = document.getElementById("dresults");
+
+      let hi = 0;
+      function hloop() {
+        let txt = heroH[hi]; hi = (hi + 1) % heroH.length;
+        reswrap.innerHTML = "";
+        ddemo.innerHTML = '<span class="dcur"></span>';
+        search.classList.add('lit');
+        let i = 0;
+        let t = setInterval(() => {
+          ddemo.innerHTML = txt.slice(0, i + 1) + '<span class="dcur"></span>';
+          i++;
+          if (i >= txt.length) {
+            clearInterval(t);
+            spin.classList.add('on');
+            setTimeout(() => {
+              spin.classList.remove('on');
+              reswrap.innerHTML = `
+            <div class="dr in">
+              <div class="dr-badge pdf">PDF</div>
+              <div class="dr-info"><div class="dr-name">Document_Match_${Math.floor(Math.random() * 100)}.pdf</div><div class="dr-snip">...exactly matching semantic query...</div></div>
+              <div class="dr-pct">${Math.floor(60 + Math.random() * 30)}%</div>
+            </div>
+            <div class="dr in" style="transition-delay:0.1s">
+              <div class="dr-badge txt">TXT</div>
+              <div class="dr-info"><div class="dr-name">Notes_${Math.floor(Math.random() * 100)}.txt</div><div class="dr-snip">...related conceptual match...</div></div>
+              <div class="dr-pct">${Math.floor(40 + Math.random() * 20)}%</div>
+            </div>
+          `;
+              setTimeout(() => {
+                let rs = reswrap.querySelectorAll('.dr');
+                rs.forEach(r => { r.style.opacity = '0'; r.style.transform = 'translateY(-5px)'; });
+                setTimeout(hloop, 400);
+              }, 3000);
+            }, 600);
+          }
+        }, 50);
+      }
+      setTimeout(hloop, 1500);
+
+      // --- Animated Aurora Canvas Background ---
+      const ac = document.getElementById('aurora-canvas');
+      const ax = ac.getContext('2d');
+      let auraTime = 0;
+
+      function drawAurora() {
+        if (!ac) return;
+        ac.width = window.innerWidth;
+        ac.height = 500;
+        ax.clearRect(0, 0, ac.width, ac.height);
+
+        let isLight = document.body.classList.contains("light");
+        let c1 = isLight ? "rgba(124,58,237,0.25)" : "rgba(167,139,250,0.25)";
+        let c2 = isLight ? "rgba(37,99,235,0.25)" : "rgba(96,165,250,0.25)";
+        let c3 = isLight ? "rgba(5,150,105,0.15)" : "rgba(52,211,153,0.15)";
+
+        auraTime += 0.0008; // slow dreamy drift
+
+        let x1 = ac.width * (0.3 + 0.2 * Math.sin(auraTime));
+        let y1 = ac.height * (0.4 + 0.15 * Math.cos(auraTime * 0.7));
+
+        let x2 = ac.width * (0.7 + 0.2 * Math.cos(auraTime * 0.8));
+        let y2 = ac.height * (0.5 + 0.2 * Math.sin(auraTime * 0.9));
+
+        let x3 = ac.width * (0.5 + 0.18 * Math.sin(auraTime * 0.5));
+        let y3 = ac.height * (0.6 + 0.18 * Math.cos(auraTime * 1.1));
+
+        ax.globalCompositeOperation = 'screen';
+
+        let blooms = [
+          { x: x1, y: y1, c: c1 },
+          { x: x2, y: y2, c: c2 },
+          { x: x3, y: y3, c: c3 }
+        ];
+
+        blooms.forEach(b => {
+          let g = ax.createRadialGradient(b.x, b.y, 0, b.x, b.y, ac.width * 0.5);
+          g.addColorStop(0, b.c);
+          g.addColorStop(1, "rgba(0,0,0,0)");
+          ax.fillStyle = g;
+          ax.fillRect(0, 0, ac.width, ac.height);
+        });
+
+        ax.globalCompositeOperation = 'source-over';
+        requestAnimationFrame(drawAurora);
+      }
+
+      // Start Loop
+      drawAurora();
+
+      window.addEventListener('resize', () => {
+        if (ac) { ac.width = window.innerWidth; ac.height = 500; }
+      });
+
+      // --- 3D Desktop Tilt Effect ---
+      const demoWrap = document.querySelector('.demo-wrap');
+      const demoWin = document.querySelector('.demo-window');
+      const demoGlow = document.querySelector('.demo-window-glow');
+
+      if (demoWrap && demoWin) {
+        let orbitTime = 0;
+        function orbitGlow() {
+          if (!demoGlow) return;
+          orbitTime += 0.005;
+          const radius = 180;
+          const ox = radius * Math.cos(orbitTime);
+          const oy = radius * Math.sin(orbitTime);
+          demoGlow.style.transform = `translate(calc(-50% + ${ox}px), calc(-50% + ${oy}px))`;
+          requestAnimationFrame(orbitGlow);
+        }
+        orbitGlow();
+
+        demoWrap.addEventListener('mousemove', (e) => {
+          const rect = demoWrap.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const xc = rect.width / 2;
+          const yc = rect.height / 2;
+          const dx = x - xc;
+          const dy = y - yc;
+
+          demoWin.style.transform = `rotateY(${dx / 35}deg) rotateX(${-dy / 25}deg)`;
+        });
+
+        demoWrap.addEventListener('mouseleave', () => {
+          demoWin.style.transform = 'rotateX(0) rotateY(0)';
+        });
+      }
+      drawAurora();
+
+
+
+      // --- Testimonials Carousel ---
+      const ttrack = document.getElementById('ttrack');
+      const dts = document.querySelectorAll('.testi-dot');
+      let cidx = 0;
+      window.gt = function (i) {
+        cidx = i;
+        dts.forEach(d => d.classList.remove('on'));
+        dts[i].classList.add('on');
+        // wrap width calculation based on card size + gap
+        let w = document.querySelector('.testi-card').offsetWidth + 20;
+        ttrack.style.transform = `translateX(-${w * i}px)`;
+      };
+
+      // auto play
+      setInterval(() => {
+        if (!document.hidden) {
+          let n = (cidx + 1) % 3;
+          gt(n);
+        }
+      }, 5000);
+
+      // --- System Hotkey Overlay Sim ---
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.code === 'KeyD') {
+          e.preventDefault();
+          document.getElementById('as-overlay').classList.add('show');
+          setTimeout(() => document.getElementById('as-input').focus(), 100);
+        }
+        if (e.key === 'Escape') {
+          document.getElementById('as-overlay').classList.remove('show');
+          document.getElementById('as-input').value = '';
+          document.getElementById('as-results').innerHTML = '<div style="padding:20px;text-align:center;font-size:13px;color:var(--ink3);">Press <kbd style="font-family:var(--mono);padding:1px 5px;background:var(--bg2);border:1px solid var(--border2);border-radius:3px;">Ctrl</kbd> + <kbd style="font-family:var(--mono);padding:1px 5px;background:var(--bg2);border:1px solid var(--border2);border-radius:3px;">Shift</kbd> + <kbd style="font-family:var(--mono);padding:1px 5px;background:var(--bg2);border:1px solid var(--border2);border-radius:3px;">D</kbd> to open — try typing anything</div>';
+        }
+      });
+
+      document.getElementById('as-overlay').addEventListener('click', (e) => {
+        if (e.target.id === 'as-overlay') {
+          document.getElementById('as-overlay').classList.remove('show');
+        }
+      });
+
+      let asTmt;
+      document.getElementById('as-input').addEventListener('input', (e) => {
+        clearTimeout(asTmt);
+        const qs = e.target.value.trim();
+        if (!qs) return;
+
+        document.getElementById('as-spin').style.display = 'block';
+
+        asTmt = setTimeout(() => {
+          document.getElementById('as-spin').style.display = 'none';
+          document.getElementById('as-results').innerHTML = `
+         <div class="as-item" tabindex="0">
+           <div class="as-item-icon" style="background:var(--red-light);color:var(--red);">PDF</div>
+           <div class="as-item-name">User_Manual_v2.pdf</div>
+           <div class="as-item-pct">84%</div>
+         </div>
+         <div class="as-item" tabindex="0">
+           <div class="as-item-icon" style="background:var(--green-light);color:var(--green);">TXT</div>
+           <div class="as-item-name">Release_Notes.txt</div>
+           <div class="as-item-pct">61%</div>
+         </div>
+       `;
+        }, 500);
+      });
+
+    });
+  </script>
+
+  <!-- Support Section Widget -->
+  <div class="upvote-widget" data-application-id="69c1729fb534274331e96721" data-user-id="USER_ID"
+    data-email="USER_EMAIL" data-position="right" data-theme="light" data-logo-url="ctrlsense_logo.png"
+    data-product-overview="YOUR_DESCRIPTION" data-about-text="YOUR_ABOUT_TEXT"
+    data-faqs='[{"question":"Your Q?","answer":"Your A."}]'>
+  </div>
+  <script src="https://upvote.entrext.com/widget.js"></script>
+
+  <!-- Auth Modal -->
+  <div class="auth-modal-backdrop" id="auth-modal">
+    <div class="auth-modal">
+      <h3>Welcome to CtrlSense</h3>
+      <p>Sign in to manage your Pro license and purchases.</p>
+      <button class="auth-google-btn" onclick="signInWithGoogle()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Continue with Google
+      </button>
+      <div class="auth-divider">or use email</div>
+      <input type="email" class="auth-input" id="auth-email" placeholder="Email address">
+      <input type="password" class="auth-input" id="auth-password" placeholder="Password">
+      <button class="auth-submit" id="auth-email-btn" onclick="signInWithEmail()">Sign In</button>
+      <div class="auth-toggle" id="auth-toggle">Don't have an account? <a onclick="toggleAuthMode()">Sign Up</a></div>
+      <div class="auth-error" id="auth-error"></div>
+      <button onclick="closeAuthModal()"
+        style="margin-top:16px; background:none; border:none; color:var(--ink3); cursor:pointer; font-size:13px;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- Load External Config -->
+  <script src="firebase-config.js"></script>
+
+  <script>
+    // Initialized from firebase-config.js
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+    let isSignUpMode = false;
+
+    // ── Auth State Listener ──
+    auth.onAuthStateChanged((user) => {
+      const signinBtn = document.getElementById('auth-signin-btn');
+      const userMenu = document.getElementById('user-menu');
+      const userAvatar = document.getElementById('user-avatar');
+      const userName = document.getElementById('user-name');
+
+      if (user) {
+        signinBtn.style.display = 'none';
+        userMenu.style.display = 'flex';
+        userAvatar.src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || user.email) + '&background=7c3aed&color=fff&size=64';
+        userName.textContent = user.displayName || user.email.split('@')[0];
+
+        // Save user to Firestore
+        db.collection('users').doc(user.uid).set({
+          email: user.email,
+          displayName: user.displayName || user.email.split('@')[0],
+          photoURL: user.photoURL || '',
+          lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+      } else {
+        signinBtn.style.display = 'inline-flex';
+        userMenu.style.display = 'none';
+      }
+    });
+
+    // ── Auth Modal ──
+    function openAuthModal() {
+      document.getElementById('auth-modal').classList.add('open');
+      document.getElementById('auth-error').textContent = '';
+    }
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.remove('open');
+    }
+
+    // ── Google Sign In ──
+    function signInWithGoogle() {
+      auth.signInWithPopup(googleProvider)
+        .then(() => closeAuthModal())
+        .catch(e => document.getElementById('auth-error').textContent = e.message);
+    }
+
+    // ── Email Sign In / Sign Up ──
+    function signInWithEmail() {
+      const email = document.getElementById('auth-email').value.trim();
+      const pass = document.getElementById('auth-password').value;
+      if (!email || !pass) {
+        document.getElementById('auth-error').textContent = 'Please fill in all fields.';
+        return;
+      }
+
+      const action = isSignUpMode
+        ? auth.createUserWithEmailAndPassword(email, pass)
+        : auth.signInWithEmailAndPassword(email, pass);
+
+      action
+        .then(() => closeAuthModal())
+        .catch(e => {
+          let msg = e.message;
+          if (e.code === 'auth/user-not-found') msg = 'No account found. Try signing up.';
+          if (e.code === 'auth/wrong-password') msg = 'Incorrect password.';
+          if (e.code === 'auth/email-already-in-use') msg = 'Email already registered. Try signing in.';
+          if (e.code === 'auth/weak-password') msg = 'Password must be at least 6 characters.';
+          document.getElementById('auth-error').textContent = msg;
+        });
+    }
+
+    // ── Toggle Sign In / Sign Up ──
+    function toggleAuthMode() {
+      isSignUpMode = !isSignUpMode;
+      document.getElementById('auth-email-btn').textContent = isSignUpMode ? 'Create Account' : 'Sign In';
+      document.getElementById('auth-toggle').innerHTML = isSignUpMode
+        ? 'Already have an account? <a onclick="toggleAuthMode()">Sign In</a>'
+        : 'Don\'t have an account? <a onclick="toggleAuthMode()">Sign Up</a>';
+      document.getElementById('auth-error').textContent = '';
+    }
+
+    // ── Sign Out ──
+    function signOutUser() {
+      auth.signOut();
+      document.getElementById('user-dropdown').classList.remove('open');
+    }
+
+    // ── User Dropdown Toggle ──
+    function toggleUserDropdown(e) {
+      e.stopPropagation();
+      document.getElementById('user-dropdown').classList.toggle('open');
+    }
+    document.addEventListener('click', () => {
+      document.getElementById('user-dropdown').classList.remove('open');
+    });
+
+    // Close modal on backdrop click
+    document.getElementById('auth-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('auth-modal')) closeAuthModal();
+    });
+
+    // ── Download Gate — require login before download ──
+    // 🔄 Bump this version when you update the zip file to bust browser cache
+    const APP_VERSION = '1.3.0';
+    let pendingDownload = false;
+
+    function gateDownload(e) {
+      e.preventDefault();
+      if (auth.currentUser) {
+        // User is logged in → trigger download
+        triggerDownload();
+      } else {
+        // Not logged in → show auth modal, flag pending download
+        pendingDownload = true;
+        openAuthModal();
+      }
+    }
+
+    function triggerDownload() {
+      const latestUrl = "https://github.com/microsaasteam4companion/bookmark-idea/releases/download/v1.3.4/AiDocumentAssistant-Windows.zip";
+      const a = document.createElement('a');
+      a.href = latestUrl;
+      a.download = '';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      pendingDownload = false;
+    }
+
+    // Auto-download after successful login if download was pending
+    auth.onAuthStateChanged((user) => {
+      if (user && pendingDownload) {
+        closeAuthModal();
+        setTimeout(() => triggerDownload(), 500);
+      }
+    });
+    // Mobile Menu Toggle Logic
+    const burgerBtn = document.getElementById('burger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+
+    function toggleMenu() {
+      mobileMenu.classList.toggle('active');
+      mobileOverlay.classList.toggle('active');
+      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    }
+
+    if(burgerBtn) burgerBtn.addEventListener('click', toggleMenu);
+    if(mobileOverlay) mobileOverlay.addEventListener('click', toggleMenu);
+    
+    // Close menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('active')) toggleMenu();
+      });
+    });
+
+  </script>
+</body>
+
+</html>

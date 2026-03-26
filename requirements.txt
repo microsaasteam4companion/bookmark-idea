@@ -1,0 +1,15 @@
+flask>=3.0
+flaskwebgui>=1.1
+pypdf>=4.0
+sentence-transformers>=3.0
+chromadb>=0.5
+transformers>=4.0
+torch>=2.0
+watchdog
+keyboard
+pygetwindow
+easyocr>=1.7
+PyMuPDF>=1.24
+python-dotenv>=1.0.0
+dodopayments
+requests

@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+uploads/
+chroma_db/
+chroma_data_v2/
+portable_build/
+landing-page/*.zip
+landing-page/*.exe
+build_log.txt
+build_log_v2.txt
+metadata_v2.json
+.env
+# landing-page/firebase-config.js

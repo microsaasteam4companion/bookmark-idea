@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation - CtrlSense</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #141419; color: #c8c8d8; padding: 48px 24px; line-height: 1.7; max-width: 820px; margin: 0 auto; }
+    a { color: #a78bfa; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1 { color: #fff; font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: #888; font-size: 14px; margin-bottom: 40px; }
+    h2 { color: #a78bfa; font-size: 20px; font-weight: 600; margin-top: 48px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(167,139,250,0.15); }
+    h3 { color: #e4e4f0; font-size: 16px; font-weight: 600; margin-top: 24px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; font-size: 15px; }
+    ul, ol { margin: 12px 0 20px 24px; font-size: 15px; }
+    li { margin-bottom: 8px; }
+    code { background: rgba(167,139,250,0.1); color: #d4bfff; padding: 2px 7px; border-radius: 4px; font-size: 13.5px; font-family: 'Consolas', 'Courier New', monospace; }
+    .step-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 24px; margin: 20px 0; }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: var(--accent, #a78bfa); color: #141419; font-weight: 700; font-size: 13px; margin-right: 10px; }
+    .badge { display: inline-block; background: rgba(167,139,250,0.12); color: #a78bfa; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 8px; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; }
+    .tip { background: rgba(52,211,153,0.06); border-left: 3px solid #34d399; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 14px; color: #a0d8c0; }
+    .warn { background: rgba(251,191,36,0.06); border-left: 3px solid #fbbf24; padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 16px 0; font-size: 14px; color: #e0c878; }
+    .back-link { margin-top: 56px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th { text-align: left; color: #a78bfa; font-weight: 600; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #c8c8d8; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* NAVBAR STYLES */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 56px;
+      display: flex; align-items: center; padding: 0 32px;
+      background: rgba(20, 20, 25, 0.88); border-bottom: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(20px);
+    }
+    .nav-logo { display:flex; align-items:center; gap:8px; font-weight:600; font-size:15px; color:#fff; }
+    .nav-logo img { width:24px; height:24px; border-radius:6px; }
+    .nav-mid { flex:1; display:flex; justify-content:center; gap:24px; }
+    .nav-mid a { font-size:13.5px; color:#9191a8; transition:0.2s; text-decoration:none !important; }
+    .nav-mid a:hover { color:#fff; }
+    .nav-burger { display:none; background:none; border:none; color:#fff; cursor:pointer; padding:8px; z-index:250; }
+    
+    .mobile-menu { position:fixed; top:0; right:-100%; width:280px; height:100vh; background:#1c1c23; z-index:245; padding:80px 32px; transition:0.4s; border-left:1px solid rgba(255,255,255,0.07); display:flex; flex-direction:column; gap:24px; box-shadow:-10px 0 30px rgba(0,0,0,0.5); }
+    .mobile-menu.active { right:0; }
+    .mobile-menu a { font-size:18px; color:#fff; text-decoration:none !important; }
+    .mobile-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:240; opacity:0; pointer-events:none; transition:0.4s; backdrop-filter:blur(4px); }
+    .mobile-overlay.active { opacity:1; pointer-events:auto; }
+
+    @media (max-width: 768px) {
+      .nav-mid { display:none !important; }
+      .nav-burger { display:block; }
+    }
+
+    .container { padding-top: 100px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="ctrlsense_logo.png" alt="Logo">
+      CtrlSense
+    </a>
+    <div class="nav-mid">
+      <a href="index.html#pipeline">How it works</a>
+      <a href="index.html#features">Features</a>
+      <a href="docs.html" style="color:#fff;">Docs</a>
+      <a href="blogs/index.html">Blogs</a>
+      <a href="index.html#download">Download</a>
+    </div>
+    <button class="nav-burger" id="burger-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+  </nav>
+
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html#pipeline">How it works</a>
+    <a href="index.html#features">Features</a>
+    <a href="docs.html">Docs</a>
+    <a href="blogs/index.html">Blogs</a>
+    <a href="index.html#download">Download</a>
+  </div>
+
+  <div class="container">
+  <p class="subtitle">Everything you need to get started with CtrlSense in under 5 minutes.</p>
+
+  <!-- ───── SYSTEM REQUIREMENTS ───── -->
+  <h2>System Requirements</h2>
+  <table>
+    <tr><th>Component</th><th>Minimum</th><th>Recommended</th></tr>
+    <tr><td>Operating System</td><td>Windows 10 (64-bit)</td><td>Windows 11</td></tr>
+    <tr><td>RAM</td><td>4 GB</td><td>8 GB+</td></tr>
+    <tr><td>Disk Space</td><td>~450 MB</td><td>1 GB free</td></tr>
+    <tr><td>CPU</td><td>Any modern 64-bit</td><td>4+ cores</td></tr>
+    <tr><td>Internet</td><td colspan="2">Not required — fully offline</td></tr>
+  </table>
+
+  <!-- ───── DOWNLOAD & INSTALL ───── -->
+  <h2>1. Download &amp; Install</h2>
+
+  <div class="step-box">
+    <p><span class="step-num">1</span><strong>Download the ZIP</strong></p>
+    <p>Click the <strong>"Download for Windows"</strong> button on the <a href="index.html">homepage</a> to get <code>AiDocumentAssistant-Windows.zip</code>.</p>
+  </div>
+
+  <div class="step-box">
+    <p><span class="step-num">2</span><strong>Extract the folder</strong></p>
+    <p>Right-click the ZIP file → <strong>Extract All</strong>. You can place the extracted folder anywhere you like (Desktop, Documents, etc.).</p>
+  </div>
+
+  <div class="step-box">
+    <p><span class="step-num">3</span><strong>Run CtrlSense</strong></p>
+    <p>Open the extracted folder and double-click <code>CtrlSense.exe</code> to launch. No installation wizard is needed — it runs as a standalone portable app.</p>
+  </div>
+
+  <div class="tip">💡 <strong>Tip:</strong> If Windows SmartScreen shows a warning, click <strong>"More info"</strong> → <strong>"Run anyway"</strong>. This appears because the app is not yet code-signed.</div>
+
+  <!-- ───── ADDING DOCUMENTS ───── -->
+  <h2>2. Adding Documents</h2>
+
+  <p>There are two ways to add documents into your local search index:</p>
+
+  <h3>A. Manual Upload</h3>
+  <ol>
+    <li>Open the CtrlSense dashboard in your browser (auto-launches at <code>http://localhost:5000</code>).</li>
+    <li>Click the <strong>"Upload"</strong> tab in the sidebar.</li>
+    <li>Drag and drop your <strong>PDF</strong> or <strong>TXT</strong> files, or click to browse.</li>
+    <li>Files are instantly parsed and indexed locally.</li>
+  </ol>
+
+  <h3>B. Watch Folder (Pro Only)</h3>
+  <ol>
+    <li>Go to <strong>Settings</strong> in the dashboard.</li>
+    <li>Set a <strong>Watch Folder</strong> path (e.g., <code>C:\Users\You\Documents\AutoIndex</code>).</li>
+    <li>Any file dropped into this folder is automatically detected, processed, and indexed in the background.</li>
+  </ol>
+
+  <div class="tip">💡 <strong>Tip:</strong> The Watch Folder feature runs a lightweight background thread that sleeps until it detects new files — it won't slow down your machine.</div>
+
+  <!-- ───── SEARCHING ───── -->
+  <h2>3. Searching Your Documents</h2>
+
+  <p>CtrlSense uses <strong>semantic AI search</strong> — it understands what you mean, not just the exact words you type.</p>
+
+  <h3>From the Dashboard</h3>
+  <ol>
+    <li>Go to the <strong>"Search"</strong> tab.</li>
+    <li>Type a natural language query like <em>"invoice from last March"</em> or <em>"contractor agreement penalty clause"</em>.</li>
+    <li>Results appear ranked by relevance with percentage match scores.</li>
+    <li>Click any result to open the original document, scrolled to the matching section with a <strong>golden highlight</strong>.</li>
+  </ol>
+
+  <h3>Using the Hotkey (Pro Only)</h3>
+  <p>Press <code>Ctrl + Shift + D</code> from anywhere on your desktop to instantly summon the CtrlSense search overlay — no need to switch windows.</p>
+
+  <!-- ───── FREE vs PRO ───── -->
+  <h2>4. Free Plan vs Pro Plan</h2>
+
+  <table>
+    <tr><th>Feature</th><th>Free ($0)</th><th>Pro ($5 one-time)</th></tr>
+    <tr><td>Document Limit</td><td>25 documents</td><td>Unlimited</td></tr>
+    <tr><td>Semantic AI Search</td><td>✅</td><td>✅</td></tr>
+    <tr><td>100% Offline Processing</td><td>✅</td><td>✅</td></tr>
+    <tr><td>Desktop Hotkey (Ctrl+Shift+D)</td><td>❌</td><td>✅</td></tr>
+    <tr><td>Watch Folder Auto-Indexing</td><td>❌</td><td>✅</td></tr>
+  </table>
+
+  <!-- ───── ACTIVATING PRO ───── -->
+  <h2>5. Activating Pro License</h2>
+
+  <div class="step-box">
+    <p><span class="step-num">1</span><strong>Purchase your license key</strong> from the <a href="https://entrextlabs.substack.com/subscribe" target="_blank">Entrext Labs store</a>.</p>
+  </div>
+
+  <div class="step-box">
+    <p><span class="step-num">2</span>Open the CtrlSense dashboard and go to <strong>Settings</strong>.</p>
+  </div>
+
+  <div class="step-box">
+    <p><span class="step-num">3</span>Paste your activation key into the <strong>"License Key"</strong> field and click <strong>"Activate"</strong>.</p>
+  </div>
+
+  <div class="step-box">
+    <p><span class="step-num">4</span>Pro features unlock <strong>instantly</strong> — no restart required. The key is stored locally on your machine.</p>
+  </div>
+
+  <div class="warn">⚠️ <strong>Note:</strong> Each license key activates on <strong>one computer</strong>. If you switch machines, deactivate the key in Settings first, then re-activate on the new device.</div>
+
+  <!-- ───── SUPPORTED FILE TYPES ───── -->
+  <h2>6. Supported File Types</h2>
+
+  <table>
+    <tr><th>Format</th><th>Status</th></tr>
+    <tr><td>PDF (.pdf)</td><td>✅ Fully supported</td></tr>
+    <tr><td>Plain Text (.txt)</td><td>✅ Fully supported</td></tr>
+    <tr><td>Word (.docx)</td><td>🔜 Coming soon</td></tr>
+    <tr><td>Spreadsheet (.csv, .xlsx)</td><td>🔜 Coming soon</td></tr>
+  </table>
+
+  <!-- ───── TROUBLESHOOTING ───── -->
+  <h2>7. Troubleshooting</h2>
+
+  <h3>App won't launch</h3>
+  <ul>
+    <li>Ensure you extracted the ZIP completely (not running from inside the archive).</li>
+    <li>Right-click <code>CtrlSense.exe</code> → <strong>Run as administrator</strong>.</li>
+    <li>Check that your system meets the minimum requirements above.</li>
+  </ul>
+
+  <h3>Search returns no results</h3>
+  <ul>
+    <li>Verify the file was fully indexed (check the Library tab for a file count).</li>
+    <li>Try broader or differently worded queries — semantic search understands synonyms.</li>
+  </ul>
+
+  <h3>SmartScreen warning on launch</h3>
+  <ul>
+    <li>This is normal for unsigned apps. Click <strong>"More info"</strong> → <strong>"Run anyway"</strong>.</li>
+  </ul>
+
+  <!-- ───── DATA & PRIVACY ───── -->
+  <h2>8. Data &amp; Privacy</h2>
+  <p>CtrlSense is built with a <strong>local-first architecture</strong>. Your documents, search queries, and AI embeddings <strong>never leave your computer</strong>. There is no cloud sync, no telemetry, and no tracking. For full details, see our <a href="privacy.html">Privacy Policy</a>.</p>
+
+  <!-- ───── CONTACT ───── -->
+  <h2>Need Help?</h2>
+  <p>Join our community for support and updates:</p>
+  <ul>
+    <li><a href="https://discord.com/invite/ZZx3cBrx2" target="_blank">Discord Community</a></li>
+    <li><a href="https://entrextlabs.substack.com/subscribe" target="_blank">Substack Newsletter</a></li>
+    <li><a href="http://linkedin.com/company/entrext/" target="_blank">LinkedIn</a></li>
+    <li><a href="https://www.instagram.com/entrext.labs/" target="_blank">Instagram</a></li>
+  </ul>
+
+  <div class="back-link">
+    <a href="index.html">← Back to Home</a>
+  </div>
+
+  </div> <!-- End Container -->
+
+  <script>
+    const burgerBtn = document.getElementById('burger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+
+    function toggleMenu() {
+      mobileMenu.classList.toggle('active');
+      mobileOverlay.classList.toggle('active');
+      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    }
+
+    if(burgerBtn) burgerBtn.addEventListener('click', toggleMenu);
+    if(mobileOverlay) mobileOverlay.addEventListener('click', toggleMenu);
+    
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('active')) toggleMenu();
+      });
+    });
+  </script>
+</body>
+</html>

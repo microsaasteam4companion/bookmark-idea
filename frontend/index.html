@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CtrlSense</title>
+  <meta name="description" content="Premium, offline AI-powered document search assistant." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Ambient Background Mesh Glows -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <div class="app-container">
+    <!-- ── Sidebar ─────────────────────────────────────────────── -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo"
+          style="background:transparent; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+          <img src="ctrlsense_logo.png"
+            style="width:100%; height:100%; border-radius:inherit; object-fit:cover; transform:scale(1.8);"
+            alt="CtrlSense Logo">
+        </div>
+        <h1>CtrlSense <span>AI · Offline</span></h1>
+      </div>
+
+      <button class="nav-btn active" data-tab="upload" id="nav-upload">
+        <span class="icon"></span> Upload
+      </button>
+      <button class="nav-btn" data-tab="search" id="nav-search">
+        <span class="icon"></span> Search
+      </button>
+      <button class="nav-btn" data-tab="library" id="nav-library">
+        <span class="icon"></span> Library
+      </button>
+
+      <div class="privacy-badge">
+        <div class="shield-icon">🛡️</div>
+        <div class="privacy-text">
+          <strong>100% Local Guard</strong>
+          <span>Zero data leaves your PC</span>
+        </div>
+      </div>
+
+      <button class="nav-btn" id="nav-settings" style="margin-top: 12px;">
+        <span class="icon">⚙️</span> Settings
+      </button>
+
+      <div class="sidebar-footer">
+        Powered by CtrlSense Engine<br />Runs entirely on your machine
+      </div>
+    </aside>
+
+    <!-- ── Main Content ────────────────────────────────────────── -->
+    <main class="main-content">
+      <div class="spotlight-close" onclick="toggleSpotlightMode()" title="Back to Dashboard">✕</div>
+
+
+      <!-- UPLOAD TAB -->
+      <section class="tab-panel active" id="tab-upload">
+        <div class="section-header">
+          <h2>Add to Brain</h2>
+          <p>Drop PDF or TXT files here to train your local AI assistant.</p>
+        </div>
+
+        <div class="upload-zone" id="upload-zone">
+          <span class="upload-icon">📥</span>
+          <h3>Drop your files here</h3>
+          <p>Supports <strong>.pdf</strong> and <strong>.txt</strong></p>
+          <button class="browse-btn" id="browse-btn">Browse Files</button>
+          <input type="file" id="file-input" accept=".pdf,.txt" multiple />
+        </div>
+        <div class="upload-status" id="upload-status"></div>
+      </section>
+
+      <!-- SEARCH TAB -->
+      <section class="tab-panel" id="tab-search">
+        <div class="section-header">
+          <h2>Ask the AI</h2>
+          <p>Ask a question naturally. The AI will find the exact paragraphs that match.</p>
+        </div>
+
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="e.g. Find all mentions of Q3 revenue..." />
+          <button id="search-btn">Ask</button>
+        </div>
+        <div class="recent-searches" id="recent-searches"></div>
+
+        <!-- Search Filters -->
+        <div class="search-filters" style="display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap;">
+          <select id="filter-file-type" style="background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; cursor: pointer; outline: none;">
+            <option value="all">All File Types</option>
+            <option value="pdf">PDF Only</option>
+            <option value="txt">TXT Only</option>
+          </select>
+          <select id="filter-sort" style="background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; cursor: pointer; outline: none;">
+            <option value="relevance">Sort: Relevance</option>
+            <option value="date_newest">Sort: Newest First</option>
+            <option value="date_oldest">Sort: Oldest First</option>
+            <option value="name">Sort: Name A-Z</option>
+          </select>
+        </div>
+
+        <div class="results-grid" id="results-container">
+          <div class="empty-state">
+            <span class="empty-icon">💭</span>
+            <h3>Ready for your questions</h3>
+            <p>Type what you're looking for and hit Ask.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- LIBRARY TAB -->
+      <section class="tab-panel" id="tab-library">
+        <div class="section-header">
+          <h2>Your Knowledge Base</h2>
+          <p>Manage all securely stored, locally analyzed documents. <span id="docs-count" style="color:var(--text-main); font-weight:600; margin-left:6px; background:rgba(255,255,255,0.05); padding:2px 8px; border-radius:12px; font-size:12px;"></span></p>
+        </div>
+        <div class="results-grid" id="library-container">
+          <div class="empty-state">
+            <span class="empty-icon">📂</span>
+            <h3>Library is empty</h3>
+            <p>Go to the Upload tab to add files to your library.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ── Loader Overlay ──────────────────────────────────────────── -->
+  <div class="loader-overlay" id="loader">
+    <div class="ai-loader">
+      <div class="ai-core"></div>
+      <div class="ai-ring ring-1"></div>
+      <div class="ai-ring ring-2"></div>
+      <div class="ai-ring ring-3"></div>
+    </div>
+    <p id="loader-text">Analyzing …</p>
+  </div>
+
+  <!-- ── Toast Container ─────────────────────────────────────────── -->
+  <!-- ── Document Preview Panel ──────────────────────────────────── -->
+  <div class="preview-backdrop" id="preview-backdrop"></div>
+  <aside class="preview-panel" id="preview-panel">
+    <div class="preview-header">
+      <h3 id="preview-title">Document Title.pdf</h3>
+      <button class="close-preview-btn" id="close-preview-btn">✕</button>
+    </div>
+    <div class="preview-content" id="preview-content">
+      Loading...
+    </div>
+  </aside>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Settings Modal -->
+  <div class="settings-backdrop" id="settings-backdrop" style="display:none;">
+    <div class="settings-modal">
+      <div class="settings-header">
+        <h3>Settings</h3>
+        <button class="close-btn" id="close-settings-btn">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-item license-section"
+          style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 16px; margin-bottom: 16px;">
+          <div class="settings-text">
+            <h4>Pro License Key 🔑</h4>
+            <p id="license-status" style="font-size:11px; color: var(--text-muted);">Activate for unlimited uploads.</p>
+          </div>
+          <div style="display:flex; gap: 8px; align-items:center;">
+            <input type="text" id="input-license" placeholder="PRO_KEY_XXXX"
+              style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 12px; width: 125px;">
+            <button class="action-btn" id="btn-activate-license"
+              style="font-size:12px; padding:6px 12px; background: var(--accent-gradient); border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer;">Activate</button>
+            <button class="action-btn" id="btn-deactivate-license"
+
+              style="display:none; font-size:11px; padding:6px 10px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#fca5a5; border-radius:8px; cursor:pointer;">Deactivate</button>
+          </div>
+        </div>
+        <div class="settings-item">
+          <div class="settings-text">
+            <h4>Create Desktop Shortcut</h4>
+            <p>Place an icon on your desktop for quick launch.</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-shortcut">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="settings-item">
+          <div class="settings-text">
+            <h4>Run at Startup</h4>
+            <p>Open automatically when Windows starts.</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-startup">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="settings-item">
+          <div class="settings-text">
+            <h4>Watch Folder</h4>
+            <p>Control background drag-and-drop actions.</p>
+          </div>
+          <button class="action-btn" id="btn-watch-folder" style="font-size:12px; padding:6px 12px;">Choose...</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

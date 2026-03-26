@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Rise of Local-First Software - CtrlSense Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #141419; --bg2: #1c1c23; --surface: #1e1e27; --border: rgba(255, 255, 255, 0.07); --ink: #e4e4f0; --ink2: #9191a8; --accent: #a78bfa; --font: 'Inter', sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.8; }
+    a { text-decoration: none; color: var(--accent); }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 56px; display: flex; align-items: center; padding: 0 32px; background: rgba(20, 20, 25, 0.88); border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); }
+    .nav-logo { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; color: var(--ink); }
+    .nav-logo img { width: 24px; height: 24px; border-radius: 6px; }
+    .nav-mid { flex: 1; display: flex; justify-content: center; gap: 24px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 100px 24px; display: grid; grid-template-columns: 1fr 300px; gap: 64px; }
+    .main-content { min-width: 0; }
+    .hero-img { width: 100%; height: 400px; border-radius: 20px; object-fit: cover; margin-bottom: 40px; }
+    h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 700; margin-bottom: 20px; color: #fff; }
+    .summary { font-size: 19px; color: var(--ink2); margin-bottom: 40px; border-left: 4px solid var(--accent); padding-left: 20px; }
+    h2 { font-size: 26px; color: #fff; margin: 40px 0 20px; }
+    p { margin-bottom: 24px; font-size: 17px; }
+    .toc { position: sticky; top: 100px; height: fit-content; }
+    @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } .toc { display: none; } }
+  
+    /* MOBILE MENU STYLES */
+    .nav-burger { display:none; background:none; border:none; color:var(--ink); cursor:pointer; padding:8px; z-index:250; margin-left:auto; }
+    .mobile-menu { position:fixed; top:0; right:-100%; width:280px; height:100vh; background:var(--bg2); z-index:245; padding:80px 32px; transition:0.4s; border-left:1px solid var(--border); display:flex; flex-direction:column; gap:24px; box-shadow:-10px 0 30px rgba(0,0,0,0.5); }
+    .mobile-menu.active { right:0; }
+    .mobile-menu a { font-size:18px; font-weight:500; color:var(--ink); text-decoration:none !important; }
+    .mobile-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:240; opacity:0; pointer-events:none; transition:0.4s; backdrop-filter:blur(4px); }
+    .mobile-overlay.active { opacity:1; pointer-events:auto; }
+    @media (max-width: 768px) { .nav-mid { display:none !important; } .nav-burger { display:block; } }
+
+  </style>
+
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The Rise of Local-First Software",
+  "image": "https://ctrlsense.vercel.app/ctrlsense_logo.png",
+  "author": {
+    "@type": "Organization",
+    "name": "CtrlSense"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CtrlSense",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ctrlsense.vercel.app/ctrlsense_logo.png"
+    }
+  },
+  "datePublished": "2026-03-27",
+  "description": "Read about The Rise of Local-First Software on the CtrlSense blog. Deep dive into local AI and semantic search."
+}
+  </script>
+</head>
+<body>
+  <nav>
+    <a href="../index.html" class="nav-logo"><img src="../ctrlsense_logo.png" alt="Logo"> CtrlSense</a>
+    <div class="nav-mid">
+      <a href="../index.html#pipeline">How it works</a>
+      <a href="../index.html#features">Features</a>
+      <a href="../docs.html">Docs</a>
+      <a href="index.html">Blogs</a>
+      <a href="../index.html#download">Download</a>
+    </div>
+  
+    <button class="nav-burger" id="burger-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+  </nav>
+
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="../index.html#pipeline">How it works</a>
+    <a href="../index.html#features">Features</a>
+    <a href="../docs.html">Docs</a>
+    <a href="index.html">Blogs</a>
+    <a href="../index.html#download">Download</a>
+  </div>
+
+
+  <div class="container">
+    <main class="main-content">
+      <div style="font-size: 14px; color: var(--ink2); margin-bottom: 16px;">March 19, 2026 • Trends</div>
+      <h1>The Rise of Local-First Software: Why Your Data Should Stay on Your Device</h1>
+      <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&w=1200&q=80" class="hero-img" alt="Local-First Software">
+      
+      <div class="summary">The cloud-first paradigm is being challenged. Discover why more developers and users are choosing to put data back where it belongs: locally.</div>
+
+      <h2 id="ownership">Reclaiming Data Ownership</h2>
+      <p>Local-first software ensures that you own your data. There's no dependency on a service provider staying in business or not changing their terms of service.</p>
+
+      <h2 id="latency">The Latency Advantage</h2>
+      <p>Working locally eliminates the milliseconds of delay that cloud apps introduce. For applications that require high concentration, like search and editing, this responsiveness is crucial.</p>
+
+      <h2 id="reliability">The Offline-Everything Mentality</h2>
+      <p>Software that works without an internet connection is inherently more reliable. It respects the user's need to work in any environment.</p>
+    </main>
+
+    <aside class="toc">
+      <div style="font-weight: 700; margin-bottom: 16px; color: var(--ink2);">TABLE OF CONTENTS</div>
+      <ul style="list-style: none;">
+        <li><a href="#ownership" style="color: var(--ink2);">Data Ownership</a></li>
+        <li><a href="#latency" style="color: var(--ink2);">Latency Advantage</a></li>
+        <li><a href="#reliability" style="color: var(--ink2);">Offline Mentality</a></li>
+      </ul>
+    </aside>
+  </div>
+
+  <script>
+    const burgerBtn = document.getElementById('burger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    function toggleMenu() {
+      mobileMenu.classList.toggle('active');
+      mobileOverlay.classList.toggle('active');
+      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    }
+    if(burgerBtn) burgerBtn.addEventListener('click', toggleMenu);
+    if(mobileOverlay) mobileOverlay.addEventListener('click', toggleMenu);
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => { if (mobileMenu.classList.contains('active')) toggleMenu(); });
+    });
+  </script>
+
+</body>
+</html>

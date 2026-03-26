@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - CtrlSense</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #141419; --bg2: #1c1c23; --border: rgba(255, 255, 255, 0.07); --ink: #e4e4f0; --ink2: #9191a8; --accent: #a78bfa; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    
+    /* NAVBAR */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 56px;
+      display: flex; align-items: center; padding: 0 32px;
+      background: rgba(20, 20, 25, 0.88); border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+    }
+    .nav-logo { display:flex; align-items:center; gap:8px; font-weight:600; font-size:15px; color:#fff; }
+    .nav-logo img { width:24px; height:24px; border-radius:6px; }
+    .nav-mid { flex:1; display:flex; justify-content:center; gap:24px; }
+    .nav-mid a { font-size: 13.5px; color: var(--ink2); transition: 0.2s; }
+    .nav-mid a:hover { color: #fff; }
+    .nav-burger { display:none; background:none; border:none; color:#fff; cursor:pointer; padding:8px; z-index:250; }
+    
+    .mobile-menu { position:fixed; top:0; right:-100%; width:280px; height:100vh; background:var(--bg2); z-index:245; padding:80px 32px; transition:0.4s; border-left:1px solid var(--border); display:flex; flex-direction:column; gap:24px; }
+    .mobile-menu.active { right:0; }
+    .mobile-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:240; opacity:0; pointer-events:none; transition:0.4s; backdrop-filter:blur(4px); }
+    .mobile-overlay.active { opacity:1; pointer-events:auto; }
+
+    @media (max-width: 768px) { .nav-mid { display:none !important; } .nav-burger { display:block; } }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 100px 24px; }
+    h1 { color: #fff; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 24px; }
+    h2 { color: var(--accent); margin-top: 32px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="ctrlsense_logo.png" alt="Logo"> CtrlSense</a>
+    <div class="nav-mid">
+      <a href="index.html#pipeline">How it works</a>
+      <a href="index.html#features">Features</a>
+      <a href="docs.html">Docs</a>
+      <a href="blogs/index.html">Blogs</a>
+      <a href="index.html#download">Download</a>
+    </div>
+    <button class="nav-burger" id="burger-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+  </nav>
+
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html#pipeline">How it works</a>
+    <a href="index.html#features">Features</a>
+    <a href="docs.html">Docs</a>
+    <a href="blogs/index.html">Blogs</a>
+    <a href="index.html#download">Download</a>
+  </div>
+
+  <div class="container">
+    <h1>Privacy Policy</h1>
+    <p>Last updated: March 2026</p>
+    <p>CtrlSense is designed as a **local-first** desktop application. Your privacy is our absolute priority.</p>
+
+    <h2>1. Data Collection & Location</h2>
+    <p>CtrlSense does **NOT** collect, store, or transmit your uploaded documents to any cloud server. Every file you index and search remains 100% locally on your desktop machine.</p>
+
+    <h2>2. AI Processing</h2>
+    <p>All extraction, parsing, and embedding is performed using an offline-compatible AI library running on your local CPU. Zero weights are sent to third-party endpoints.</p>
+
+    <h2>3. License Validation</h2>
+    <p>When you purchase a Pro key, local validation checks are run purely to facilitate unlocks without continuous telemetry or tracking.</p>
+
+    <p style="margin-top:40px;"><a href="index.html">← Back to Home</a></p>
+  </div>
+
+  <script>
+    const burgerBtn = document.getElementById('burger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    function toggleMenu() {
+      mobileMenu.classList.toggle('active');
+      mobileOverlay.classList.toggle('active');
+      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    }
+    if(burgerBtn) burgerBtn.addEventListener('click', toggleMenu);
+    if(mobileOverlay) mobileOverlay.addEventListener('click', toggleMenu);
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => { if (mobileMenu.classList.contains('active')) toggleMenu(); });
+    });
+  </script>
+</body>
+</html>

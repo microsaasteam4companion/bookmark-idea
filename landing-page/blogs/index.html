@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogs - CtrlSense</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #141419;
+      --bg2: #1c1c23;
+      --surface: #1e1e27;
+      --border: rgba(255, 255, 255, 0.07);
+      --ink: #e4e4f0;
+      --ink2: #9191a8;
+      --accent: #a78bfa;
+      --font: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 56px;
+      display: flex; align-items: center; padding: 0 32px;
+      background: rgba(20, 20, 25, 0.88); border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-logo { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; }
+    .nav-logo img { width: 24px; height: 24px; border-radius: 6px; }
+
+    .nav-mid { flex: 1; display: flex; justify-content: center; gap: 24px; }
+    .nav-mid a { font-size: 13.5px; color: var(--ink2); transition: 0.2s; }
+    .nav-mid a:hover { color: var(--ink); }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 100px 24px; }
+    h1 { font-size: 48px; font-weight: 700; margin-bottom: 16px; letter-spacing: -1.5px; }
+    .subtitle { color: var(--ink2); font-size: 18px; margin-bottom: 48px; }
+
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 32px; }
+    .blog-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px; 
+      overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column;
+    }
+    .blog-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    
+    .blog-img { width: 100%; height: 200px; background: #2a2a35; object-fit: cover; }
+    .blog-content { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+    .blog-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; letter-spacing: 1px; }
+    .blog-title { font-size: 20px; font-weight: 600; margin-bottom: 12px; line-height: 1.4; color: #fff; }
+    .blog-excerpt {
+      font-size: 14px;
+      color: var(--ink2);
+      margin-bottom: 24px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* MOBILE MENU STYLES */
+    .nav-burger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 8px;
+      z-index: 250;
+      margin-left: auto;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 280px;
+      height: 100vh;
+      background: var(--bg2);
+      z-index: 245;
+      padding: 80px 32px;
+      transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    }
+
+    .mobile-menu.active {
+      right: 0;
+    }
+
+    .mobile-menu a {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 240;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.4s;
+      backdrop-filter: blur(4px);
+    }
+
+    .mobile-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 36px; }
+      .nav-mid { display: none !important; }
+      .nav-burger { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html" class="nav-logo">
+      <img src="../ctrlsense_logo.png" alt="Logo">
+      CtrlSense
+    </a>
+    <div class="nav-mid">
+      <a href="../index.html#pipeline">How it works</a>
+      <a href="../index.html#features">Features</a>
+      <a href="../docs.html">Docs</a>
+      <a href="index.html" style="color: var(--ink);">Blogs</a>
+      <a href="../index.html#download">Download</a>
+    </div>
+    <button class="nav-burger" id="burger-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+  </nav>
+
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="../index.html#pipeline">How it works</a>
+    <a href="../index.html#features">Features</a>
+    <a href="../docs.html">Docs</a>
+    <a href="index.html">Blogs</a>
+    <a href="../index.html#download">Download</a>
+  </div>
+
+  <div class="container">
+    <h1>Insights & Resources</h1>
+    <p class="subtitle">Exploring the future of local-first AI and semantic search.</p>
+
+    <div class="blog-grid">
+      <!-- Blog 1 -->
+      <a href="ctrlsense-vs-competitors.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="CtrlSense vs Competitors">
+        <div class="blog-content">
+          <div class="blog-tag">Comparison</div>
+          <h3 class="blog-title">CtrlSense vs Its Competitors: Why Local AI Search Wins</h3>
+          <p class="blog-excerpt">Discover why local processing and semantic understanding set CtrlSense apart from traditional cloud-based search tools and standard desktop search.</p>
+          <div class="blog-footer">
+            <span>March 27, 2026</span>
+            <span>6 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Blog 2 -->
+      <a href="semantic-search-revolution.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="Semantic Search">
+        <div class="blog-content">
+          <div class="blog-tag">Technology</div>
+          <h3 class="blog-title">How Semantic Search is Revolutionizing Document Management</h3>
+          <p class="blog-excerpt">Traditional keyword search is dying. Learn how AI understands the context of your documents to provide 10x better results.</p>
+          <div class="blog-footer">
+            <span>March 26, 2026</span>
+            <span>5 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Blog 3 -->
+      <a href="importance-of-privacy-in-ai.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="Privacy in AI">
+        <div class="blog-content">
+          <div class="blog-tag">Privacy</div>
+          <h3 class="blog-title">The Importance of Privacy in AI: Moving Beyond the Cloud</h3>
+          <p class="blog-excerpt">In an era of data leaks, keeping your AI models local is the only way to ensure 100% data sovereignty and privacy.</p>
+          <div class="blog-footer">
+            <span>March 25, 2026</span>
+            <span>7 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Blog 4 -->
+      <a href="productivity-hacks-document-libraries.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="Productivity Hacks">
+        <div class="blog-content">
+          <div class="blog-tag">Productivity</div>
+          <h3 class="blog-title">10 Productivity Hacks for Managing Large Document Libraries</h3>
+          <p class="blog-excerpt">Stop wasting hours hunting for files. These 10 hacks will help you organize and find anything in seconds.</p>
+          <div class="blog-footer">
+            <span>March 24, 2026</span>
+            <span>4 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Blog 5 -->
+      <a href="future-of-offline-ai.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="Offline AI">
+        <div class="blog-content">
+          <div class="blog-tag">Future Tech</div>
+          <h3 class="blog-title">Why Offline AI is the Future of Personal Knowledge Bases</h3>
+          <p class="blog-excerpt">Why wait for cloud processing? Local AI is faster, safer, and always available even without an internet connection.</p>
+          <div class="blog-footer">
+            <span>March 23, 2026</span>
+            <span>6 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Blog 6 -->
+      <a href="understanding-vector-embeddings.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="Vector Embeddings">
+        <div class="blog-content">
+          <div class="blog-tag">Deep Dive</div>
+          <h3 class="blog-title">Understanding Vector Embeddings: The Tech Behind CtrlSense</h3>
+          <p class="blog-excerpt">A beginner's guide to how AI translates human language into mathematical vectors for high-speed semantic search.</p>
+          <div class="blog-footer">
+            <span>March 22, 2026</span>
+            <span>8 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Blog 7 -->
+      <a href="organize-research-papers.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="Research Papers">
+        <div class="blog-content">
+          <div class="blog-tag">Use Case</div>
+          <h3 class="blog-title">How to Organize Your Research Papers with CtrlSense</h3>
+          <p class="blog-excerpt">Academic researchers and students: here is how to use semantic search to connect ideas across thousands of PDFs.</p>
+          <div class="blog-footer">
+            <span>March 21, 2026</span>
+            <span>5 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Blog 8 -->
+      <a href="boosting-workflow-with-spotlight.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="Spotlight Search">
+        <div class="blog-content">
+          <div class="blog-tag">Workflow</div>
+          <h3 class="blog-title">Boosting Your Workflow with Global Hotkeys and Spotlight Search</h3>
+          <p class="blog-excerpt">Learn how the Ctrl+Shift+D shortcut can save you hours of context switching every week.</p>
+          <div class="blog-footer">
+            <span>March 20, 2026</span>
+            <span>4 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Blog 9 -->
+      <a href="rise-of-local-first-software.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="Local-First Software">
+        <div class="blog-content">
+          <div class="blog-tag">Trends</div>
+          <h3 class="blog-title">The Rise of Local-First Software: Why Your Data Should Stay on Your Device</h3>
+          <p class="blog-excerpt">The pendulum is swinging back from the cloud. Explore the movement towards software that prioritizes user ownership.</p>
+          <div class="blog-footer">
+            <span>March 19, 2026</span>
+            <span>6 min read</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Blog 10 -->
+      <a href="chromadb-vs-others.html" class="blog-card">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" class="blog-img" alt="ChromaDB Comparison">
+        <div class="blog-content">
+          <div class="blog-tag">Development</div>
+          <h3 class="blog-title">Comparing ChromaDB and Other Vector Databases for Local Search</h3>
+          <p class="blog-excerpt">A technical comparison of vector storage solutions and why ChromaDB is the perfect fit for local AI applications.</p>
+          <div class="blog-footer">
+            <span>March 18, 2026</span>
+            <span>7 min read</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <footer style="padding: 60px 24px; border-top: 1px solid var(--border); background: #0f0f15; text-align: center;">
+    <p style="font-size: 13px; color: var(--ink2);">&copy; 2026 CtrlSense. All rights reserved.</p>
+  </footer>
+  <script>
+    const burgerBtn = document.getElementById('burger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+
+    function toggleMenu() {
+      mobileMenu.classList.toggle('active');
+      mobileOverlay.classList.toggle('active');
+      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    }
+
+    if(burgerBtn) burgerBtn.addEventListener('click', toggleMenu);
+    if(mobileOverlay) mobileOverlay.addEventListener('click', toggleMenu);
+    
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('active')) toggleMenu();
+      });
+    });
+  </script>
+</body>
+</html>
