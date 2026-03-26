@@ -1,19 +1,8 @@
 {
-  "name": "ctrlsense-landing",
-  "framework": null,
-  "public": true,
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/landing-page/sitemap.xml" },
-    { "source": "/robots.txt", "destination": "/landing-page/robots.txt" },
-    { "source": "/blogs", "destination": "/landing-page/blogs/index.html" },
-    { "source": "/blogs/(.*)", "destination": "/landing-page/blogs/$1" },
-    { "source": "/docs", "destination": "/landing-page/docs.html" },
-    { "source": "/purchases", "destination": "/landing-page/purchases.html" },
-    { "source": "/privacy", "destination": "/landing-page/privacy.html" },
-    { "source": "/terms", "destination": "/landing-page/terms.html" },
-    { "source": "/google(.*)\\.html", "destination": "/landing-page/google$1.html" },
-    { "source": "/(.*)", "destination": "/landing-page/$1" }
+    { "source": "/blogs", "destination": "/blogs/index.html" },
+    { "source": "/blogs/(.*).html", "destination": "/blogs/$1" }
   ]
 }

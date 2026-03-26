@@ -1,7 +1,8 @@
 import os
 import re
 
-root_dir = r"c:\Users\LENOVO\Downloads\bookmark-idea-main\bookmark-idea-main\landing-page"
+# NOW WE SYNC DOCUMENTS IN THE ROOT
+root_dir = r"c:\Users\LENOVO\Downloads\bookmark-idea-main\bookmark-idea-main"
 
 navbar_html = """
   <nav id="nav">
@@ -39,7 +40,7 @@ navbar_html = """
         <img class="user-avatar" id="user-avatar" src="" alt="User">
         <span class="user-name" id="user-name"></span>
         <div class="user-dropdown" id="user-dropdown">
-          <a href="/purchases.html">🛒 My Purchases</a>
+          <a href="/purchases">🛒 My Purchases</a>
           <div class="dd-divider"></div>
           <button onclick="signOutUser()">🚪 Sign Out</button>
         </div>
@@ -58,69 +59,44 @@ navbar_html = """
     <a href="/#features">Features</a>
     <a href="/docs">Docs</a>
     <a href="/blogs">Blogs</a>
-    <a href="/purchases.html" id="mobile-purchases-link" style="display: none;">My Purchases</a>
+    <a href="/purchases" id="mobile-purchases-link" style="display: none;">My Purchases</a>
     <a href="/#download" id="mobile-dl-link">Download Now</a>
     <div id="mobile-auth-section" style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border);">
-       <!-- Auth content injected via JS -->
     </div>
   </div>
 """
 
 def apply_navbar(directory):
+    # Only target the relevant HTML files in root and blogs/
+    target_files = [
+        "index.html", "docs.html", "purchases.html", "privacy.html", "terms.html"
+    ]
+    # Also include blogs/ index and posts
     for root, dirs, files in os.walk(directory):
+        if "landing-page" in root: continue # skip the old folder
+        if "core" in root or "frontend" in root: continue # skip app folders
+        
         for file in files:
             if file.endswith(".html"):
                 path = os.path.join(root, file)
-                with open(path, "r", encoding="utf-8") as f:
-                    content = f.read()
-                
-                # 1. Replace nav block
-                content = re.sub(r'<nav.*?</nav>', navbar_html, content, flags=re.DOTALL)
-                
-                # 2. Add/replace mobile components
-                content = re.sub(r'<div class="mobile-overlay".*?</div>', '', content, flags=re.DOTALL)
-                content = re.sub(r'<div class="mobile-menu".*?</div>', '', content, flags=re.DOTALL)
-                
-                # 3. Ensure the CSS for .nav-right exists
-                if ".nav-right {" not in content:
-                    mobile_css = """
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .nav-burger { display:none; background:none; border:none; color:#fff; cursor:pointer; padding:8px; z-index:250; }
-    .mobile-menu { position:fixed; top:0; right:-100%; width:280px; height:100vh; background:#1c1c23; z-index:245; padding:80px 32px; transition:0.4s; border-left:1px solid rgba(255,255,255,0.07); display:flex; flex-direction:column; gap:24px; box-shadow:-10px 0 30px rgba(0,0,0,0.5); }
-    .mobile-menu.active { right:0; }
-    .mobile-menu a { font-size:18px; color:#fff; text-decoration:none !important; }
-    .mobile-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:240; opacity:0; pointer-events:none; transition:0.4s; backdrop-filter:blur(4px); }
-    .mobile-overlay.active { opacity:1; pointer-events:auto; }
-    @media (max-width: 768px) { .nav-mid { display:none !important; } .nav-burger { display:block; } .auth-btn, .nav-btn-solid { display:none !important; } }
-"""
-                    if "</style>" in content:
-                        content = content.replace("</style>", mobile_css + "\n  </style>")
-
-                # 4. Ensure toggle script exists
-                if "toggleMenu" not in content:
-                    mobile_js = """
-  <script>
-    const burgerBtn = document.getElementById('burger-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileOverlay = document.getElementById('mobile-overlay');
-    function toggleMenu() {
-      mobileMenu.classList.toggle('active');
-      mobileOverlay.classList.toggle('active');
-      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
-    }
-    if(burgerBtn) burgerBtn.addEventListener('click', toggleMenu);
-    if(mobileOverlay) mobileOverlay.addEventListener('click', toggleMenu);
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => { if (mobileMenu.classList.contains('active')) toggleMenu(); });
-    });
-  </script>
-"""
-                    if "</body>" in content:
-                        content = content.replace("</body>", mobile_js + "\n</body>")
-
-                with open(path, "w", encoding="utf-8") as f:
-                    f.write(content)
-                print(f"Applied navbar to {path}")
+                # Check if it's one of ours
+                if file in target_files or "blogs" in root:
+                    with open(path, "r", encoding="utf-8") as f:
+                        content = f.read()
+                    
+                    # Replace nav block
+                    content = re.sub(r'<nav.*?</nav>', navbar_html, content, flags=re.DOTALL)
+                    
+                    # Replace mobile components
+                    content = re.sub(r'<div class="mobile-overlay".*?</div>', '', content, flags=re.DOTALL)
+                    content = re.sub(r'<div class="mobile-menu".*?</div>', '', content, flags=re.DOTALL)
+                    
+                    # Update internal link to config for JS (if needed)
+                    # content = content.replace('src="/landing-page/', 'src="/')
+                    
+                    with open(path, "w", encoding="utf-8") as f:
+                        f.write(content)
+                    print(f"Applied navbar to {path}")
 
 apply_navbar(root_dir)
-print("All pages synchronized.")
+print("All pages synchronized at root.")
