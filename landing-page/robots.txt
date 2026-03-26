@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ctrlsense.vercel.app/sitemap.xml
+Sitemap: https://ctrlsense.entrext.com/sitemap.xml

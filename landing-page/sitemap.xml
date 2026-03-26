@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Core Pages -->
-  <url><loc>https://ctrlsense.vercel.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/docs</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/purchases</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/docs</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/purchases</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   
   <!-- Blogs -->
-  <url><loc>https://ctrlsense.vercel.app/blogs/boosting-workflow-with-spotlight</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs/chromadb-vs-others</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs/ctrlsense-vs-competitors</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs/future-of-offline-ai</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs/importance-of-privacy-in-ai</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs/organize-research-papers</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs/productivity-hacks-document-libraries</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs/rise-of-local-first-software</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs/semantic-search-revolution</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/blogs/understanding-vector-embeddings</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/boosting-workflow-with-spotlight</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/chromadb-vs-others</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/ctrlsense-vs-competitors</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/future-of-offline-ai</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/importance-of-privacy-in-ai</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/organize-research-papers</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/productivity-hacks-document-libraries</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/rise-of-local-first-software</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/semantic-search-revolution</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/blogs/understanding-vector-embeddings</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   
   <!-- Legal -->
-  <url><loc>https://ctrlsense.vercel.app/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://ctrlsense.vercel.app/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://ctrlsense.entrext.com/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>
